@@ -115,7 +115,7 @@ $(function () {
     chart: {
       width: 180,
       type: "donut",
-      fontFamily: "Plus Jakarta Sans', sans-serif",
+      fontFamily: "IBM Plex Sans Thai', sans-serif",
       foreColor: "#adb0bb",
     },
     plotOptions: {
@@ -173,7 +173,7 @@ $(function () {
         enabled: true,
       },
       group: "sparklines",
-      fontFamily: "Plus Jakarta Sans', sans-serif",
+      fontFamily: "IBM Plex Sans Thai', sans-serif",
       foreColor: "#adb0bb",
     },
     series: [
