@@ -67,7 +67,7 @@ include('../conf/head.php');
                                                         <h6 class="fw-semibold mb-0"><?= $countrow ?></h6>
                                                     </td>
                                                     <td class="border-bottom-0">
-                                                        <h6 class="fw-semibold mb-1">
+                                                        <h6 class="fw-semibold mb-1 <?= ($t1['receipt_cc'] == 'cancel') ? ' text-decoration-line-through' : ''; ?>">
                                                             <?= $t1['name_title']; ?> <?= $t1['rec_name']; ?> <?= $t1['rec_surname']; ?>
                                                             <?php if ($t1['status_donat'] == 'offline') { ?>
                                                                 <span class="badge bg-info rounded-3 fw-semibold"><?= $t1['status_donat']; ?></span>
@@ -75,13 +75,21 @@ include('../conf/head.php');
                                                                 <span class="badge bg-danger rounded-3 fw-semibold"><?= $t1['status_donat']; ?></span>
                                                             <?php } ?>
                                                         </h6>
-                                                        <span class="fw-normal"><?= $t1['rec_date_out']; ?> | <?= $t1['id_receipt']; ?></span>
+                                                        <?php
+                                                        $htmlDate = $t1['rec_date_out'];
+                                                        $dateTime = new DateTime($htmlDate);
+                                                        $dateTime->modify('+543 years');
+                                                        $formattedDate = $dateTime->format('d-m-Y');
+                                                        ?>
+                                                        <span class="fw-normal<?= ($t1['receipt_cc'] == 'cancel') ? ' text-decoration-line-through' : ''; ?>">
+                                                            <?= $formattedDate; ?> | <?= $t1['id_receipt']; ?>
+                                                        </span>
                                                     </td>
                                                     <td class="border-bottom-0">
-                                                        <p class="mb-0 fw-normal"><?= $t1['edo_name']; ?><?= $t1['other_description']; ?></p>
+                                                        <p class="mb-0 fw-normal <?= ($t1['receipt_cc'] == 'cancel') ? ' text-decoration-line-through' : ''; ?>"><?= $t1['edo_name']; ?><?= $t1['other_description']; ?></p>
                                                     </td>
                                                     <td class="border-bottom-0">
-                                                        <h6 class="fw-semibold mb-1"><?= number_format($t1['amount'], 2, '.', ','); ?></h6>
+                                                        <h6 class="fw-semibold mb-1 <?= ($t1['receipt_cc'] == 'cancel') ? ' text-decoration-line-through' : ''; ?>"><?= number_format($t1['amount'], 2, '.', ','); ?></h6>
                                                     </td>
                                                     <td class="border-bottom-0">
                                                         <div class="dropdown">
