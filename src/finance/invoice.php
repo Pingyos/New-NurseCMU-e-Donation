@@ -18,8 +18,8 @@ include('../conf/head.php');
                     <div class="col-lg-12 d-flex align-items-stretch">
                         <div class="card w-100">
                             <div class="card-body p-4">
-                                <a href="" class="card-title fw-semibold mb-4 btn btn-info" style="color: white; font-size: 14px;">บุคคล</a>
-                                <a href="" class="card-title fw-semibold mb-4 btn btn-info" style="color: white; font-size: 14px;">นิติบุคคล</a>
+                                <a href="invoice_person.php" class="card-title fw-semibold mb-4 btn btn-info" style="color: white; font-size: 14px;">บุคคล</a>
+                                <a href="invoice_corporation.php" class="card-title fw-semibold mb-4 btn btn-info" style="color: white; font-size: 14px;">นิติบุคคล</a>
                                 <div class="table-responsive">
                                     <table class="table text-nowrap mb-0 align-middle">
                                         <thead class="text-dark fs-4">
