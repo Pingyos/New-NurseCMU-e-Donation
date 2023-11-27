@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
 <?php
-include('../conf/head.php');
+include('conf/head.php');
 ?>
 
 <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <?php
-        include('../conf/aside.php');
+        include('conf/aside.php');
         ?>
         <div class="body-wrapper">
             <?php
-            include('../conf/header.php');
+            include('conf/header.php');
             ?>
             <div class="container-fluid">
                 <div class="row">
@@ -24,7 +24,7 @@ include('../conf/head.php');
                                         <form method="post">
                                             <?php
                                             if (isset($_GET['receipt_id'])) {
-                                                require_once '../conf/connection.php';
+                                                require_once 'conf/connection.php';
                                                 $stmt = $conn->prepare("SELECT* FROM receipt WHERE receipt_id=?");
                                                 $stmt->execute([$_GET['receipt_id']]);
                                                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -176,7 +176,7 @@ include('../conf/head.php');
 
                 </div>
                 <?php
-                include('../conf/footer.php');
+                include('conf/footer.php');
                 ?>
             </div>
         </div>

@@ -32,7 +32,7 @@ if (
     && isset($_POST['receipt_cc'])
 ) {
 
-    require_once '../conf/connection.php';
+    require_once 'conf/connection.php';
     $stmt = $conn->prepare("UPDATE receipt SET
     name_title = :name_title,
     rec_name = :rec_name,

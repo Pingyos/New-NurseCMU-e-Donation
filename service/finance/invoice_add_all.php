@@ -31,7 +31,7 @@ if (
     isset($_POST['receipt_cc']) &&
     isset($_POST['ref1'])
 ) {
-    require_once '../conf/connection.php';
+    require_once 'conf/connection.php';
     try {
         $conn->beginTransaction();
         $stmt = $conn->prepare("INSERT INTO receipt_offline

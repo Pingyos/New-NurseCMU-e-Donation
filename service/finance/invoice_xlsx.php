@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $sql .= " ORDER BY id_receipt DESC";
 
-    require_once '../conf/connection.php';
+    require_once 'conf/connection.php';
 
     $stmt = $conn->prepare($sql);
 

@@ -12,7 +12,7 @@ $(function () {
   }
   
   $.ajax({
-    url: '../conf/condata.php', // แทนที่ชื่อไฟล์ตามที่คุณตั้งไว้
+    url: 'conf/condata.php', // แทนที่ชื่อไฟล์ตามที่คุณตั้งไว้
     method: 'GET',
     dataType: 'json',
     success: function (jsonData) {

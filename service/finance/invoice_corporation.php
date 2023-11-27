@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
 <?php
-include('../conf/head.php');
+include('conf/head.php');
 ?>
 
 <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <?php
-        include('../conf/aside.php');
+        include('conf/aside.php');
         ?>
         <div class="body-wrapper">
             <?php
-            include('../conf/header.php');
+            include('conf/header.php');
             ?>
             <div class="container-fluid">
                 <div class="row">
@@ -127,7 +127,7 @@ include('../conf/head.php');
                                                         <select name="edo_name" id="edo_name" class="form-control" required>
                                                             <option value="">เลือกโครงการ</option>
                                                             <?php
-                                                            require_once '../conf/connection.php';
+                                                            require_once 'conf/connection.php';
 
                                                             try {
                                                                 $query = "SELECT edo_name, edo_pro_id, edo_description, edo_objective FROM pro_offline";
@@ -224,7 +224,7 @@ include('../conf/head.php');
 
                 </div>
                 <?php
-                include('../conf/footer.php');
+                include('conf/footer.php');
                 ?>
             </div>
         </div>

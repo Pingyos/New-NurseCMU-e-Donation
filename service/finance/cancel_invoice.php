@@ -1,5 +1,5 @@
 <?php
-require_once '../conf/connection.php';
+require_once 'conf/connection.php';
 $receipt_id = $_GET['receipt_id'];
 $pdflink = "https://app.nurse.cmu.ac.th/edonation/finance/pdf_recrip_cc.php?receipt_id=$receipt_id&ACTION=VIEW";
 $amount = 0;
