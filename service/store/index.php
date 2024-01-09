@@ -17,167 +17,53 @@ include('conf/head.php');
                 <div class="row">
                     <?php
                     require_once 'conf/connection.php';
-                    $stmt05 = $conn->prepare("SELECT COUNT(*) AS total_records05, SUM(amount) AS total_amount05 FROM receipt WHERE edo_pro_id = 121205 AND receipt_cc = 'confirm'");
-                    $stmt05->execute();
-                    $result05 = $stmt05->fetch();
+                    $seta = $conn->prepare("SELECT items FROM storage WHERE name = 'Set A'");
+                    $seta->execute();
+                    $result = $seta->fetch();
 
-                    $stmt06 = $conn->prepare("SELECT COUNT(*) AS total_records06, SUM(amount) AS total_amount06 FROM receipt WHERE edo_pro_id = 121206 AND receipt_cc = 'confirm'");
-                    $stmt06->execute();
-                    $result06 = $stmt06->fetch();
+                    $setb = $conn->prepare("SELECT items FROM storage WHERE name = 'Set B'");
+                    $setb->execute();
+                    $setb_result = $setb->fetch();
 
-                    $stmt07 = $conn->prepare("SELECT COUNT(*) AS total_records07, SUM(amount) AS total_amount07 FROM receipt WHERE edo_pro_id = 121207 AND receipt_cc = 'confirm'");
-                    $stmt07->execute();
-                    $result07 = $stmt07->fetch();
+                    $setc = $conn->prepare("SELECT items FROM storage WHERE name = 'Set C'");
+                    $setc->execute();
+                    $setc_result = $setc->fetch();
 
-                    $stmt08 = $conn->prepare("SELECT COUNT(*) AS total_records08, SUM(amount) AS total_amount08 FROM receipt WHERE edo_pro_id = 121208 AND receipt_cc = 'confirm'");
-                    $stmt08->execute();
-                    $result08 = $stmt08->fetch();
-
+                    $setd = $conn->prepare("SELECT items FROM storage WHERE name = 'Set D'");
+                    $setd->execute();
+                    $setd_result = $setd->fetch();
                     ?>
-                    <div class="col-lg-6">
+                    <div class="col-md-3">
+                        <h5 class="card-title fw-semibold mb-4">Set A Griptok</h5>
                         <div class="card">
+                            <img src="../assets/images/souvenir/setA.png" class="card-img-top" alt="...">
                             <div class="card-body">
-                                <div class="row alig n-items-start" style="height: 85px;">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-12 fw-semibold"> บริจาคเพื่อการศึกษา เพื่อเป็นทุนการศึกษา </h5>
-                                        <h6 class="fw-semibold mb-3"><?php echo number_format($result05['total_amount05'], 2); ?> บาท | <?php echo $result05['total_records05']; ?> ราย</h6>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="d-flex justify-content-end">
-                                            <div class="text-white bg-primary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h5 class="card-title"><?= $result['items'] ?> ชิ้น</h5>
+                                <p class="card-text">บริจาค 1,000 บาทขั้นไป</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-md-3">
+                        <h5 class="card-title fw-semibold mb-4">Set B จานรองแก้วเซรามิค</h5>
                         <div class="card">
+                            <img src="../assets/images/souvenir/setB.png" class="card-img-top" alt="...">
                             <div class="card-body">
-                                <div class="row alig n-items-start" style="height: 85px;">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-12 fw-semibold"> บริจาคเพื่อระดมพลัง เร่งรัดปรับปรุงคุณภาพ คณะพยาบาลศาสตร์ มหาวิทยาลัยเชียงใหม่ </h5>
-                                        <h6 class="fw-semibold mb-3"><?php echo number_format($result06['total_amount06'], 2); ?> บาท | <?php echo $result06['total_records06']; ?> ราย</h6>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="d-flex justify-content-end">
-                                            <div class="text-white bg-dark rounded-circle p-6 d-flex align-items-center justify-content-center">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h5 class="card-title"><?= $setb_result['items'] ?> ชิ้น</h5>
+                                <p class="card-text">บริจาค 3,000 บาทขั้นไป</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-md-3">
+                        <h5 class="card-title fw-semibold mb-4">Set C ชุดเข็มกลัด</h5>
                         <div class="card">
+                            <img src="../assets/images/souvenir/setC.png" class="card-img-top" alt="...">
                             <div class="card-body">
-                                <div class="row alig n-items-start" style="height: 85px;">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-12 fw-semibold"> บริจาคเพื่อสาธารณะประโยชน์และการกุศลอื่น </h5>
-                                        <h6 class="fw-semibold mb-3"><?php echo number_format($result07['total_amount07'], 2); ?> บาท | <?php echo $result07['total_records07']; ?> ราย</h6>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="d-flex justify-content-end">
-                                            <div class="text-white bg-success rounded-circle p-6 d-flex align-items-center justify-content-center">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h5 class="card-title"><?= $setc_result['items'] ?> ชิ้น</h5>
+                                <p class="card-text">บริจาค 100,000 บาทขั้นไป</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row alig n-items-start" style="height: 85px;">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-12 fw-semibold"> โครงการบริจาคเพิ่มเติม </h5>
-                                        <h6 class="fw-semibold mb-3"><?php echo number_format($result08['total_amount08'], 2); ?> บาท | <?php echo $result08['total_records08']; ?> ราย</h6>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="d-flex justify-content-end">
-                                            <div class="text-white bg-warning rounded-circle p-6 d-flex align-items-center justify-content-center">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                    $sqlRecordsoffline = "SELECT COUNT(*) AS total_records_offline FROM receipt WHERE status_donat = 'offline' AND receipt_cc = 'confirm'";
-                    $stmtRecordsoffline = $conn->prepare($sqlRecordsoffline);
-                    $stmtRecordsoffline->execute();
-                    $resultRecordsoffline = $stmtRecordsoffline->fetch();
-
-                    $sqlRecordsonline = "SELECT COUNT(*) AS total_records_online FROM receipt WHERE status_donat = 'online' AND receipt_cc = 'confirm'";
-                    $stmtRecordsonline = $conn->prepare($sqlRecordsonline);
-                    $stmtRecordsonline->execute();
-                    $resultRecordsonline = $stmtRecordsonline->fetch();
-
-                    $sqltotal_records = "SELECT COUNT(*) AS total_records FROM receipt WHERE receipt_cc = 'confirm'";
-                    $stmttotal_records = $conn->prepare($sqltotal_records);
-                    $stmttotal_records->execute();
-                    $resulttotal_records = $stmttotal_records->fetch();
-
-                    $sqltotal_amountsum = "SELECT SUM(amount) AS total_amountsum FROM receipt WHERE receipt_cc = 'confirm'";
-                    $stmttotal_amountsum = $conn->prepare($sqltotal_amountsum);
-                    $stmttotal_amountsum->execute();
-                    $resulttotal_amountsum = $stmttotal_amountsum->fetch();
-                    ?>
-                    <div class="col-lg-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row alig n-items-start" style="height: 85px;">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-12 fw-semibold"> บริจากผ่านช่องทางบุคลากร </h5>
-                                        <h6 class="fw-semibold mb-3"><?php echo $resultRecordsoffline['total_records_offline']; ?> ราย</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row alig n-items-start" style="height: 85px;">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-12 fw-semibold"> บริจากผ่านช่องทาง QE-Code </h5>
-                                        <h6 class="fw-semibold mb-3"><?php echo $resultRecordsonline['total_records_online']; ?> ราย</h6>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row alig n-items-start" style="height: 85px;">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-12 fw-semibold"> รวมผู้บริจาคทั้งหมด </h5>
-                                        <h6 class="fw-semibold mb-3"><?php echo $resulttotal_records['total_records']; ?> ราย</h6>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row alig n-items-start" style="height: 85px;">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-12 fw-semibold"> รวมยอดเงินทั้งหมด </h5>
-                                        <h6 class="fw-semibold mb-3"><?php echo number_format($resulttotal_amountsum['total_amountsum'], 2); ?> บาท</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12 d-flex align-items-strech">
+                    <!-- <div class="col-lg-12 d-flex align-items-strech">
                         <div class="card w-100">
                             <div class="card-body">
                                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
@@ -214,7 +100,7 @@ include('conf/head.php');
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
                 <?php

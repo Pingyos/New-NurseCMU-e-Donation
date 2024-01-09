@@ -29,11 +29,11 @@
                     <span class="hide-menu">ข้อมูลหลัก</span>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="invoice.php" aria-expanded="false">
+                    <a class="sidebar-link" href="store_order.php" aria-expanded="false">
                         <span>
                             <i class="ti ti-file-description"></i>
                         </span>
-                        <span class="hide-menu">ออกใบเสร็จ</span>
+                        <span class="hide-menu">รายการส่งของ</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
