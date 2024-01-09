@@ -177,45 +177,7 @@ include('conf/head.php');
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12 d-flex align-items-strech">
-                        <div class="card w-100">
-                            <div class="card-body">
-                                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                                    <div class="mb-3 mb-sm-0">
-                                        <h5 class="card-title fw-semibold">กราฟแสดงยอดเงินแต่ละเดือน</h5>
-                                    </div>
-                                </div>
-                                <div id="chart"></div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="mb-3" style="position: relative;">
-                                            <div style="position: absolute; width: 12px; height: 12px; background-color: #5D87FF; border-radius: 50%; left: -18px; top: 50%; transform: translateY(-50%);"></div>
-                                            <h6 class="mb-0 fw-normal" style="padding-left: 10px;">121205 บริจาคเพื่อการศึกษา เพื่อเป็นทุนการศึกษานักศึกษาพยาบาลศาสตร์ มหาวิทยาลัยเชียงใหม่</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3" style="position: relative;">
-                                            <div style="position: absolute; width: 12px; height: 12px; background-color: #2A3547; border-radius: 50%; left: -18px; top: 50%; transform: translateY(-50%);"></div>
-                                            <h6 class="mb-0 fw-normal" style="padding-left: 10px;">121206 บริจาคเพื่อระดมพลัง เร่งรัดปรับปรุงคุณภาพ คณะพยาบาลศาสตร์ มหาวิทยาลัยเชียงใหม่</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3" style="position: relative;">
-                                            <div style="position: absolute; width: 12px; height: 12px; background-color: #13DEB9; border-radius: 50%; left: -18px; top: 50%; transform: translateY(-50%);"></div>
-                                            <h6 class="mb-0 fw-normal" style="padding-left: 10px;">121207 บริจาคเพื่อสาธารณะประโยชน์และการกุศลอื่น ๆ</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3" style="position: relative;">
-                                            <div style="position: absolute; width: 12px; height: 12px; background-color: #FA896B; border-radius: 50%; left: -18px; top: 50%; transform: translateY(-50%);"></div>
-                                            <h6 class="mb-0 fw-normal" style="padding-left: 10px;">121208 โครงการบริจาคเพิ่มเติม</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                
                 </div>
                 <?php
                 include('conf/footer.php');

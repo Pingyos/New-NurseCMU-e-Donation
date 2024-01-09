@@ -110,15 +110,16 @@ if (
                     if ($updateReceiptResult) {
                         $conn->commit();
                         $insertStoreSql = "INSERT INTO store (id, ref1, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, rec_idname, address, road, districts, amphures, provinces, zip_code, rec_date_s, rec_date_out, amount, payby, edo_name, other_description, edo_pro_id, edo_description, edo_objective, comment, status_donat, status_user, status_receipt, resDesc, rec_time, pdflink, receipt_cc, dateCreate, items, items_set)
-            SELECT id, ref1, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, rec_idname, address, road, districts, amphures, provinces, zip_code, rec_date_s, rec_date_out, amount, payby, edo_name, other_description, edo_pro_id, edo_description, edo_objective, comment, status_donat, status_user, status_receipt, resDesc, rec_time, pdflink, receipt_cc, dateCreate,1,
-            CASE
-                WHEN amount BETWEEN 1000.00 AND 2999.99 THEN 'A'
-                WHEN amount BETWEEN 3000.00 AND 99999.99 THEN 'B'
-                WHEN amount >= 100000.00 THEN 'C'
-                ELSE 'D'
-            END AS items_set
-            FROM receipt
-            WHERE id = :id";
+                        SELECT id, ref1, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, rec_idname, address, road, districts, amphures, provinces, zip_code, rec_date_s, rec_date_out, amount, payby, edo_name, other_description, edo_pro_id, edo_description, edo_objective, comment, status_donat, status_user, status_receipt, resDesc, rec_time, pdflink, receipt_cc, dateCreate,1,
+                        CASE
+                            WHEN amount BETWEEN 1000.00 AND 2999.99 THEN 'A'
+                            WHEN amount BETWEEN 3000.00 AND 99999.99 THEN 'B'
+                            WHEN amount >= 100000.00 THEN 'C'
+                            ELSE 'D'
+                        END AS items_set
+                        FROM receipt
+                        WHERE id = :id";
+
                         $insertStoreStmt = $conn->prepare($insertStoreSql);
                         $insertStoreStmt->bindParam(':id', $id, PDO::PARAM_INT);
                         $insertStoreResult = $insertStoreStmt->execute();
@@ -208,9 +209,9 @@ if (
 
                         $mail->msgHTML($email_content);
                         if (!$mail->send()) {
-                            echo "Email sending failed: " . $mail->ErrorInfo;
+                            echo "";
                         } else {
-                            echo "Email sent successfully.";
+                            echo "ระบบได้ส่ง Email ไปยังผู้บริจาคแล้ว";
                         }
                         function notify_message($sMessage, $Token)
                         {
@@ -244,20 +245,20 @@ if (
                             notify_message($sMessage, $Token);
                         }
                         echo '
-            <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">';
+                        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">';
                         echo '<script>
-                swal({
-                    title: "บันทึกข้อมูลบริจาคสำเร็จ", 
-                    text: "กรุณารอสักครู่",
-                    type: "success", 
-                    timer: 2000, 
-                    showConfirmButton: false 
-                }, function(){
-                    window.location.href = "invoice.php"; 
-                });
-            </script>';
+                            swal({
+                                title: "บันทึกข้อมูลบริจาคสำเร็จ", 
+                                text: "กรุณารอสักครู่",
+                                type: "success", 
+                                timer: 2000, 
+                                showConfirmButton: false 
+                            }, function(){
+                                window.location.href = "invoice.php"; 
+                            });
+                        </script>';
                     } else {
                         $conn->rollback();
                         echo '<script>

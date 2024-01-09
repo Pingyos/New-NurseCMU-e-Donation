@@ -21,7 +21,15 @@
                         <span>
                             <i class="ti ti-layout-dashboard"></i>
                         </span>
-                        <span class="hide-menu">ข้อมูล</span>
+                        <span class="hide-menu">รายละเอียดข้อมูล</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="user_data.php" aria-expanded="false">
+                        <span>
+                            <i class="ti ti-user-plus"></i>
+                        </span>
+                        <span class="hide-menu">ข้อมูลผู้บริจาค</span>
                     </a>
                 </li>
                 <li class="nav-small-cap">

@@ -26,6 +26,38 @@ include('conf/head.php');
                                                 <h6 class="form-label">กรอกข้อมูลผู้บริจาค</h6>
                                             </div>
                                             <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="mb-3">
+                                                        <label for="reg_urse" class="form-label">รายชื่อผู้บริจาค</label>
+                                                        <select id="reg_urse" class="form-control">
+                                                            <option value="" data-name-title="" data-rec-name="" data-rec-surname="" data-rec-idname="" data-rec-tel="" data-rec-email="" data-address="" data-road="" data-provinces="" data-amphures="" data-districts="" data-zip-code="">กรุณาเลือก</option>
+                                                            <?php
+                                                            require_once 'conf/connection.php';
+                                                            $sql = "SELECT DISTINCT name_title, rec_name, rec_surname, rec_tel, rec_email, rec_idname, address, road, districts, amphures, provinces, zip_code FROM user";
+                                                            $result = $conn->query($sql);
+                                                            if ($result->rowCount() > 0) {
+                                                                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                                    echo '<option value="' . $row['rec_name'] . '" 
+                                        data-name-title="' . $row['name_title'] . '" 
+                                        data-rec-name="' . $row['rec_name'] . '" 
+                                        data-rec-surname="' . $row['rec_surname'] . '" 
+                                        data-rec-idname="' . $row['rec_idname'] . '" 
+                                        data-rec-tel="' . $row['rec_tel'] . '" 
+                                        data-rec-email="' . $row['rec_email'] . '" 
+                                        data-address="' . $row['address'] . '" 
+                                        data-road="' . $row['road'] . '" 
+                                        data-provinces="' . $row['provinces'] . '" 
+                                        data-amphures="' . $row['amphures'] . '" 
+                                        data-districts="' . $row['districts'] . '" 
+                                        data-zip-code="' . $row['zip_code'] . '">
+                                    ' . $row['name_title'] . ' ' . $row['rec_name'] . ' ' . $row['rec_surname'] . ' ' . $row['rec_idname'] . ' ' . $row['rec_tel'] . ' ' . $row['rec_email'] . ' ( ที่อยู่ ' . $row['address'] . ' ถนน.' . $row['road'] . ' ตำบล.' . $row['districts'] . ' อำเภอ.' . $row['amphures'] . ' จังหวัด.' . $row['provinces'] . ' รหัสไปรษณีย์.' . $row['zip_code'] . ' )
+                                </option>';
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
                                                         <label for="name_title" class="form-label">คำนำหน้าชื่อ</label>
@@ -46,7 +78,7 @@ include('conf/head.php');
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
                                                         <label for="rec_surname" class="form-label">สกุล</label>
-                                                        <input type="text" name="rec_surname" class="form-control" id="selectedSurname">
+                                                        <input type="text" name="rec_surname" class="form-control" id="selectedSurname" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
@@ -225,8 +257,31 @@ include('conf/head.php');
                                                 });
                                             </script>
                                         </form>
+
+                                        <script>
+                                            document.getElementById('reg_urse').addEventListener('change', function() {
+                                                var selectedOption = this.options[this.selectedIndex];
+                                                console.log(selectedOption.dataset); // เพิ่มบรรทัดนี้
+                                                if (selectedOption) {
+                                                    document.getElementById('selectedTitle').value = selectedOption.dataset.nameTitle;
+                                                    document.getElementById('selectedName').value = selectedOption.dataset.recName;
+                                                    document.getElementById('selectedSurname').value = selectedOption.dataset.recSurname;
+                                                    document.getElementById('selectedIdName').value = selectedOption.dataset.recIdname;
+                                                    document.getElementById('selectedTel').value = selectedOption.dataset.recTel;
+                                                    document.getElementById('selectedEmail').value = selectedOption.dataset.recEmail;
+                                                    document.getElementById('selectedAddress').value = selectedOption.dataset.address;
+                                                    document.getElementById('selectedRoad').value = selectedOption.dataset.road;
+                                                    document.getElementById('provincesInput').value = selectedOption.dataset.provinces;
+                                                    document.getElementById('amphuresInput').value = selectedOption.dataset.amphures;
+                                                    document.getElementById('districtsInput').value = selectedOption.dataset.districts;
+                                                    document.getElementById('selectedZipCode').value = selectedOption.dataset.zipCode;
+
+                                                }
+                                            });
+                                        </script>
                                         <?php
                                         require_once 'invoice_add_all.php';
+                                        require_once 'invoice_user_add.php';
                                         // echo '<pre>';
                                         // print_r($_POST);
                                         // echo '</pre>';
