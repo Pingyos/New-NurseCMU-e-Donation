@@ -73,7 +73,10 @@ include('conf/head.php');
                                                                     }
                                                                     ?>
                                                                     <div class="ms-3 d-inline-block w-75">
-                                                                        <h6 class="mb-0 invoice-customer"><?= $t1['name_title']; ?> <?= $t1['rec_name']; ?> <?= $t1['rec_surname']; ?></h6>
+                                                                        <h6 class="mb-0 invoice-customer">
+                                                                            <?= $t1['name_title']; ?>
+                                                                            <?= $t1['rec_name']; ?>
+                                                                            <?= $t1['rec_surname']; ?></h6>
                                                                         <span class="fs-3 invoice-id text-truncate text-body-color d-block w-85"><?= $t1['id_receipt']; ?></span>
                                                                         <span class="fs-3 invoice-date text-nowrap text-body-color d-block"><?= thai_date($t1['rec_date_out']); ?></span>
                                                                     </div>
@@ -107,7 +110,8 @@ include('conf/head.php');
                                                             <div class="modal-dialog modal-lg">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="transferModalLabel<?= $t1['receipt_id']; ?>">รายละเอียดการโอน</h5>
+                                                                        <h5 class="modal-title" id="transferModalLabel<?= $t1['receipt_id']; ?>">
+                                                                            รายละเอียดการโอน</h5>
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body"></div>
@@ -155,59 +159,136 @@ include('conf/head.php');
                                 }
 
                                 ?>
+                                <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
+                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
                                 <script>
                                     function openDetails(receiptId, ref1) {
                                         openPDF(receiptId);
                                     }
 
                                     function openPDF(receiptId) {
-                                        var pdfURL = "invoice_confirm.php?receipt_id=" + receiptId + "&ACTION=VIEW";
-                                        var pdfViewer = document.getElementById("pdfViewer");
-                                        console.log(pdfViewer);
-                                        var iframe = document.createElement("iframe");
-                                        iframe.src = pdfURL;
-                                        iframe.width = "100%";
-                                        iframe.height = "1000";
-                                        iframe.style.border = "none";
-                                        pdfViewer.innerHTML = "";
-                                        pdfViewer.appendChild(iframe);
-
-                                        var editDataButton = document.createElement("button");
-                                        editDataButton.className = "btn btn-info btn-circle btn-xl me-1 mb-3 mb-lg-3";
-                                        editDataButton.innerHTML = '<i class="ti ti-pencil fs-5"></i>';
-                                        editDataButton.onclick = function() {
-                                            openEditDataModal(receiptId);
-                                        };
-
-                                        var textEndDiv = document.createElement("div");
-                                        textEndDiv.className = "text-end";
-                                        textEndDiv.appendChild(editDataButton);
-
-                                        var statusDonatURL = 'get_status_donat.php?receipt_id=' + receiptId;
-                                        fetch(statusDonatURL)
+                                        var receiptCCURL = 'get_receipt_cc.php?receipt_id=' + receiptId;
+                                        fetch(receiptCCURL)
                                             .then(response => response.json())
                                             .then(data => {
-                                                if (data.status_donat === 'online') {
-                                                    var transferButton = document.createElement("button");
-                                                    transferButton.className = "btn btn-warning btn-circle btn-xl me-1 mb-3 mb-lg-3";
-                                                    transferButton.innerHTML = '<i class="ti ti-folder fs-5"></i>';
-                                                    transferButton.onclick = function() {
-                                                        openTransferModal(receiptId);
-                                                    };
-                                                    textEndDiv.appendChild(transferButton);
+                                                var receiptCC = data.receipt_cc;
+                                                var pdfURL;
+                                                if (receiptCC === 'cancel') {
+                                                    pdfURL = "invoice_cancel.php?receipt_id=" + receiptId + "&ACTION=VIEW";
+                                                } else if (receiptCC === 'confirm') {
+                                                    pdfURL = "invoice_confirm.php?receipt_id=" + receiptId + "&ACTION=VIEW";
                                                 } else {
-                                                    console.log('Status_donat is not "online".');
+                                                    console.log('Invalid receipt_cc value.');
+                                                    return;
                                                 }
+                                                var pdfViewer = document.getElementById("pdfViewer");
+                                                console.log(pdfViewer);
+                                                var iframe = document.createElement("iframe");
+                                                iframe.src = pdfURL;
+                                                iframe.width = "100%";
+                                                iframe.height = "1000";
+                                                iframe.style.border = "none";
+                                                pdfViewer.innerHTML = "";
+                                                pdfViewer.appendChild(iframe);
+
+                                                var editDataButton = document.createElement("button");
+                                                editDataButton.className = "btn btn-info btn-circle btn-xl me-1 mb-3 mb-lg-3";
+                                                editDataButton.innerHTML = '<i class="ti ti-pencil fs-5"></i>';
+                                                editDataButton.onclick = function() {
+                                                    openEditDataModal(receiptId);
+                                                };
+
+                                                var textEndDiv = document.createElement("div");
+                                                textEndDiv.className = "text-end";
+                                                textEndDiv.appendChild(editDataButton);
+
+                                                // เพิ่มปุ่มยกเลิก
+                                                var cancelButton = document.createElement("button");
+                                                cancelButton.className = "btn btn-danger btn-circle btn-xl me-1 mb-3 mb-lg-3";
+                                                cancelButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-devices-cancel" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 15.5v-6.5a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v3.5" /><path d="M18 8v-3a1 1 0 0 0 -1 -1h-13a1 1 0 0 0 -1 1v12a1 1 0 0 0 1 1h8" /><path d="M19 19m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M17 21l4 -4" /><path d="M16 9h2" /></svg>';
+                                                cancelButton.onclick = function() {
+                                                    confirmcancel(receiptId);
+                                                };
+                                                textEndDiv.appendChild(cancelButton);
+
+                                                var statusDonatURL = 'get_status_donat.php?receipt_id=' + receiptId;
+                                                fetch(statusDonatURL)
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.status_donat === 'online') {
+                                                            var transferButton = document.createElement("button");
+                                                            transferButton.className = "btn btn-warning btn-circle btn-xl me-1 mb-3 mb-lg-3";
+                                                            transferButton.innerHTML = '<i class="ti ti-folder fs-5"></i>';
+                                                            transferButton.onclick = function() {
+                                                                openTransferModal(receiptId);
+                                                            };
+                                                            textEndDiv.appendChild(transferButton);
+                                                        } else {
+                                                            console.log('Status_donat is not "online".');
+                                                        }
+                                                    })
+                                                    .catch(error => console.error('Error:', error));
+
+                                                pdfViewer.insertBefore(textEndDiv, pdfViewer.firstChild);
+
                                             })
                                             .catch(error => console.error('Error:', error));
+                                    }
 
-                                        pdfViewer.insertBefore(textEndDiv, pdfViewer.firstChild);
+                                    function confirmcancel(receiptId) {
+                                        swal({
+                                                title: "คำเตือน",
+                                                text: "เมื่อคุณกด 'ยืนยันการยกเลิก' ระบบจะทำงานยกเลิกใบเสร็จรับเงิน และจะไม่สามารถนำกลับมาได้อีก",
+                                                type: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#DD6B55",
+                                                confirmButtonText: "ยืนยันการยกเลิก",
+                                                cancelButtonText: "เลิกทำ",
+                                                closeOnConfirm: false
+                                            },
+                                            function(isConfirm) {
+                                                if (isConfirm) {
+                                                    openCancel(receiptId);
+                                                }
+                                            });
+                                    }
+
+                                    function openCancel(receiptId) {
+                                        var cancelURL = 'cancel_invoice.php?receipt_id=' + receiptId;
+                                        fetch(cancelURL)
+                                            .then(response => response.text()) // เพิ่มบรรทัดนี้
+                                            .then(data => {
+                                                console.log(data);
+                                            })
+                                            .catch(error => console.error('Error:', error));
+                                    }
+
+
+
+                                    function confirmcancel(receipt_id) {
+                                        swal({
+                                                title: "คำเตือน",
+                                                text: "เมื่อคุณกด 'ยืนยันการยกเลิก' ระบบจะทำงานยกเลิกใบเสร็จรับเงิน และจะไม่สามารถนำกลับมาได้อีก",
+                                                type: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#DD6B55",
+                                                confirmButtonText: "ยืนยันการยกเลิก",
+                                                cancelButtonText: "เลิกทำ",
+                                                closeOnConfirm: false
+                                            },
+                                            function(isConfirm) {
+                                                if (isConfirm) {
+                                                    window.location = "cancel_invoice.php?receipt_id=" + receipt_id;
+                                                }
+                                            });
                                     }
 
 
                                     function openTransferModal(receiptId) {
                                         $('#transferModal' + receiptId).modal('show');
-                                        var modalBody = document.querySelector('#transferModal' + receiptId + ' .modal-body');
+                                        var modalBody = document.querySelector('#transferModal' + receiptId +
+                                            ' .modal-body');
                                         var transferURL = 'paycheck.php?receipt_id=' + receiptId;
                                         fetch(transferURL)
                                             .then(response => response.text())
@@ -224,9 +305,11 @@ include('conf/head.php');
                                             .then(data => {
                                                 if (data.status_user) {
                                                     if (data.status_user === 'person') {
-                                                        window.location.href = 'edit_invoice_person.php?receipt_id=' + receiptId;
+                                                        window.location.href = 'edit_invoice_person.php?receipt_id=' +
+                                                            receiptId;
                                                     } else if (data.status_user === 'corporation') {
-                                                        window.location.href = 'edit_invoice_corporation.php?receipt_id=' + receiptId;
+                                                        window.location.href =
+                                                            'edit_invoice_corporation.php?receipt_id=' + receiptId;
                                                     } else {
                                                         console.log('Invalid status_user:', data.status_user);
                                                     }
@@ -237,11 +320,10 @@ include('conf/head.php');
                                             .catch(error => console.error('Error:', error));
                                     }
 
-
-
                                     function openTransferModal(receiptId) {
                                         $('#transferModal' + receiptId).modal('show');
-                                        var modalBody = document.querySelector('#transferModal' + receiptId + ' .modal-body');
+                                        var modalBody = document.querySelector('#transferModal' + receiptId +
+                                            ' .modal-body');
                                         var transferURL = 'paycheck.php?receipt_id=' + receiptId;
                                         fetch(transferURL)
                                             .then(response => response.text())
