@@ -1,5 +1,5 @@
 <?php
-require '../conf/connection_pdf.php';
+require 'conf/connection_pdf.php';
 require('../TCPDF/tcpdf.php');
 ob_start();
 // Thai month names
