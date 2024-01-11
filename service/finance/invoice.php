@@ -99,8 +99,8 @@ include('conf/head.php');
                                         <div class="card w-100">
                                             <div class="card-body p-4">
                                                 <div class="table-responsive">
-                                                    <div class="invoice-header d-flex align-items-center border-bottom p-3">
-                                                        <h4 class="font-medium text-uppercase mb-0">รายละเอียดใบเสร็จ</h4>
+                                                    <div class="invoice-header d-flex align-items-center  p-2">
+                                                        <h4 class="font-medium text-uppercase">รายละเอียดใบเสร็จ</h4>
                                                     </div>
                                                     <?php foreach ($result as $t1) { ?>
                                                         <div class="modal fade" id="transferModal<?= $t1['receipt_id']; ?>" tabindex="-1" aria-labelledby="transferModalLabel<?= $t1['receipt_id']; ?>" aria-hidden="true">
@@ -160,38 +160,73 @@ include('conf/head.php');
                                         openPDF(receiptId);
                                     }
 
-                                    function openPDF(receiptId) {
-                                        var pdfURL = "invoice_confirm.php?receipt_id=" + receiptId + "&ACTION=VIEW";
+                                    function openDetails(receiptId, ref1, statusUser) {
+                                        openPDF(receiptId, statusUser);
+                                    }
+
+                                    function openPDF(receiptId, statusUser) {
+                                        var pdfURL = '';
                                         var pdfViewer = document.getElementById("pdfViewer");
                                         console.log(pdfViewer);
                                         var iframe = document.createElement("iframe");
-                                        iframe.src = pdfURL;
-                                        iframe.width = "100%";
-                                        iframe.height = "1000";
-                                        iframe.style.border = "none";
-                                        pdfViewer.innerHTML = "";
-                                        pdfViewer.appendChild(iframe);
-                                        var statusDonatURL = 'get_status_donat.php?receipt_id=' + receiptId;
-                                        fetch(statusDonatURL)
+                                        var receiptCCURL = 'get_receipt_cc.php?receipt_id=' + receiptId;
+                                        fetch(receiptCCURL)
                                             .then(response => response.json())
                                             .then(data => {
-                                                if (data.status_donat === 'online') {
-                                                    var transferButton = document.createElement("button");
-                                                    transferButton.className = "btn btn-danger";
-                                                    transferButton.textContent = "รายละเอียดการโอน";
-                                                    transferButton.onclick = function() {
-                                                        openTransferModal(receiptId);
-                                                    };
-
-                                                    var textEndDiv = document.createElement("div");
-                                                    textEndDiv.className = "text-end";
-                                                    textEndDiv.appendChild(transferButton);
-                                                    pdfViewer.appendChild(textEndDiv);
-                                                } else {
-                                                    console.log('Status_donat is not "online".');
+                                                if (data.receipt_cc === 'cancel') {
+                                                    pdfURL = "invoice_cancel.php?receipt_id=" + receiptId + "&ACTION=VIEW";
+                                                } else if (data.receipt_cc === 'confirm') {
+                                                    pdfURL = "invoice_confirm.php?receipt_id=" + receiptId + "&ACTION=VIEW";
                                                 }
+                                                iframe.src = pdfURL;
+                                                iframe.width = "100%";
+                                                iframe.height = "1000";
+                                                iframe.style.border = "none";
+                                                pdfViewer.innerHTML = "";
+                                                pdfViewer.appendChild(iframe);
+
+                                                var editButton = document.createElement("button");
+                                                editButton.className = "btn btn-primary btn-circle btn-xl me-1 mb-3 mb-lg-3";
+                                                editButton.innerHTML = '<i class="ti ti-pencil fs-5"></i>';
+                                                editButton.onclick = function() {
+                                                    // เรียกใช้ฟังก์ชันเพื่อเปิด Modal แก้ไข
+                                                    openEditInvoice(receiptId, statusUser);
+                                                };
+                                                var editButtonDiv = document.createElement("div");
+                                                editButtonDiv.className = "text-end";
+                                                editButtonDiv.appendChild(editButton);
+                                                pdfViewer.insertBefore(editButtonDiv, pdfViewer.firstChild);
+
+                                                var statusDonatURL = 'get_status_donat.php?receipt_id=' + receiptId;
+                                                fetch(statusDonatURL)
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.status_donat === 'online') {
+                                                            var transferButton = document.createElement("button");
+                                                            transferButton.className = "btn btn-warning btn-circle btn-xl me-1 mb-3 mb-lg-3";
+                                                            transferButton.innerHTML = '<i class="ti ti-folder fs-5"></i>';
+                                                            transferButton.onclick = function() {
+                                                                openTransferModal(receiptId);
+                                                            };
+
+                                                            var buttonsDiv = document.createElement("div");
+                                                            buttonsDiv.className = "text-end";
+                                                            buttonsDiv.appendChild(transferButton);
+                                                            buttonsDiv.appendChild(editButton);
+
+                                                            pdfViewer.insertBefore(buttonsDiv, pdfViewer.firstChild);
+                                                        } else {
+                                                            console.log('Status_donat is not "online".');
+                                                        }
+                                                    })
+                                                    .catch(error => console.error('Error:', error));
                                             })
                                             .catch(error => console.error('Error:', error));
+                                    }
+
+                                    function openEditInvoice(receiptId, statusUser) {
+                                        var editInvoiceURL = (statusUser === 'person') ? 'edit_invoice_person.php?receipt_id=' + receiptId : 'edit_invoice_corporation.php?receipt_id=' + receiptId;
+                                        window.location.href = editInvoiceURL;
                                     }
 
                                     function openTransferModal(receiptId) {
