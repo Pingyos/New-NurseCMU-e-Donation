@@ -18,144 +18,198 @@ include('conf/head.php');
                     <div class="col-lg-12 d-flex align-items-stretch">
                         <div class="card w-100">
                             <div class="card-body p-4">
-                                <a href="invoice_person.php" class="card-title fw-semibold mb-4 btn btn-info" style="color: white; font-size: 14px;">บุคคล</a>
-                                <a href="invoice_corporation.php" class="card-title fw-semibold mb-4 btn btn-info" style="color: white; font-size: 14px;">นิติบุคคล</a>
-                                <div class="table-responsive">
-                                    <table class="table text-nowrap mb-0 align-middle">
-                                        <thead class="text-dark fs-4">
-                                            <tr>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">ลำดับ</h6>
-                                                </th>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">ชื่อ-นามสกุล</h6>
-                                                </th>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">โครงการ</h6>
-                                                </th>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">จำนวนเงิน</h6>
-                                                </th>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">รายละเอียด</h6>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            require_once 'conf/connection.php';
-                                            $rowsPerPage = 10;
-                                            $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                                            $offset = ($page - 1) * $rowsPerPage;
+                                <div class="row">
+                                    <div class="col-lg-4 d-flex align-items-stretch">
+                                        <div class="card w-100">
+                                            <div class="card-body p-4">
+                                                <div class="table-responsive">
+                                                    <?php
+                                                    require_once 'conf/connection.php';
+                                                    $rowsPerPage = 10;
+                                                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                                    $offset = ($page - 1) * $rowsPerPage;
 
-                                            $stmt = $conn->prepare("SELECT * FROM receipt  ORDER BY receipt_id DESC LIMIT :offset, :rows");
-                                            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-                                            $stmt->bindParam(':rows', $rowsPerPage, PDO::PARAM_INT);
-                                            $stmt->execute();
-                                            $result = $stmt->fetchAll();
+                                                    $stmt = $conn->prepare("SELECT * FROM receipt  ORDER BY receipt_id DESC LIMIT :offset, :rows");
+                                                    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+                                                    $stmt->bindParam(':rows', $rowsPerPage, PDO::PARAM_INT);
+                                                    $stmt->execute();
+                                                    $result = $stmt->fetchAll();
 
-                                            $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM receipt");
-                                            $countStmt->execute();
-                                            $totalRows = $countStmt->fetchColumn();
-                                            $totalPages = ($totalRows > 0) ? ceil($totalRows / $rowsPerPage) : 1;
+                                                    $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM receipt");
+                                                    $countStmt->execute();
+                                                    $totalRows = $countStmt->fetchColumn();
+                                                    $totalPages = ($totalRows > 0) ? ceil($totalRows / $rowsPerPage) : 1;
 
-                                            $countrow = ($page - 1) * $rowsPerPage + 1;
-                                            foreach ($result as $t1) {
-                                            ?>
-                                                <tr>
-                                                    <td class="border-bottom-0">
-                                                        <h6 class="fw-semibold mb-0"><?= $countrow ?></h6>
-                                                    </td>
-                                                    <td class="border-bottom-0">
-                                                        <h6 class="fw-semibold mb-1 <?= ($t1['receipt_cc'] == 'cancel') ? ' text-decoration-line-through' : ''; ?>">
-                                                            <?= $t1['name_title']; ?> <?= $t1['rec_name']; ?> <?= $t1['rec_surname']; ?>
-                                                            <?php if ($t1['status_donat'] == 'offline') { ?>
-                                                                <span class="badge bg-info rounded-3 fw-semibold"><?= $t1['status_donat']; ?></span>
-                                                            <?php } else { ?>
-                                                                <span class="badge bg-danger rounded-3 fw-semibold"><?= $t1['status_donat']; ?></span>
+                                                    $countrow = ($page - 1) * $rowsPerPage + 1;
+                                                    foreach ($result as $t1) {
+                                                    ?>
+                                                        <ul class="invoice-users">
+                                                            <li>
+                                                                <a href="javascript:void(0);" onclick="openDetails('<?= $t1['receipt_id']; ?>', '<?= $t1['ref1']; ?>')" class="p-3 bg-hover-light-black border-bottom d-flex align-items-start invoice-user listing-user">
+                                                                    <?php
+                                                                    if ($t1['status_donat'] === "offline") {
+                                                                    ?>
+                                                                        <div class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                                                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                                                            </svg>
+                                                                        </div>
+                                                                    <?php
+                                                                    } elseif ($t1['status_donat'] === "online") {
+                                                                    ?>
+                                                                        <div class="text-white bg-danger rounded-circle p-6 d-flex align-items-center justify-content-center">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-app-window" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                                <path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                                                                                <path d="M6 8h.01" />
+                                                                                <path d="M9 8h.01" />
+                                                                            </svg>
+                                                                        </div>
+                                                                    <?php
+                                                                    } else {
+                                                                        echo "Invalid status_donat value";
+                                                                    }
+                                                                    ?>
+                                                                    <div class="ms-3 d-inline-block w-75">
+                                                                        <h6 class="mb-0 invoice-customer"><?= $t1['name_title']; ?> <?= $t1['rec_name']; ?> <?= $t1['rec_surname']; ?></h6>
+                                                                        <span class="fs-3 invoice-id text-truncate text-body-color d-block w-85"><?= $t1['id_receipt']; ?></span>
+                                                                        <span class="fs-3 invoice-date text-nowrap text-body-color d-block"><?= thai_date($t1['rec_date_out']); ?></span>
+                                                                    </div>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    <?php } ?>
+                                                    <div class="text-center mt-4">
+                                                        <ul class="pagination justify-content-center">
+                                                            <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
+                                                                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                                                                    <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                                                                </li>
                                                             <?php } ?>
-                                                        </h6>
-                                                        <?php
-                                                        $htmlDate = $t1['rec_date_out'];
-                                                        $dateTime = new DateTime($htmlDate);
-                                                        $dateTime->modify('+543 years');
-                                                        $formattedDate = $dateTime->format('d-m-Y');
-                                                        ?>
-                                                        <span class="fw-normal<?= ($t1['receipt_cc'] == 'cancel') ? ' text-decoration-line-through' : ''; ?>">
-                                                            <?= $formattedDate; ?> | <?= $t1['id_receipt']; ?>
-                                                        </span>
-                                                    </td>
-                                                    <td class="border-bottom-0">
-                                                        <p class="mb-0 fw-normal <?= ($t1['receipt_cc'] == 'cancel') ? ' text-decoration-line-through' : ''; ?>"><?= $t1['edo_name']; ?><?= $t1['other_description']; ?></p>
-                                                    </td>
-                                                    <td class="border-bottom-0">
-                                                        <h6 class="fw-semibold mb-1 <?= ($t1['receipt_cc'] == 'cancel') ? ' text-decoration-line-through' : ''; ?>"><?= number_format($t1['amount'], 2, '.', ','); ?></h6>
-                                                    </td>
-                                                    <td class="border-bottom-0">
-                                                        <div class="dropdown">
-                                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                                                <i class="bx bx-dots-vertical-rounded"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item" href="<?= ($t1['receipt_cc'] == 'cancel') ? 'invoice_cancel.php?receipt_id=' . $t1['receipt_id'] : 'invoice_confirm.php?receipt_id=' . $t1['receipt_id'] ?>&ACTION=VIEW" target="_blank">
-                                                                    <i class="bx bx-file-pdf me-1"></i> PDF
-                                                                </a>
-                                                                <?php if ($t1['status_donat'] == 'online') { ?>
-                                                                    <a class="dropdown-item" href="paycheck.php?receipt_id=<?= $t1['receipt_id']; ?>&ref1=<?= $t1['ref1']; ?>">
-                                                                        <i class="bx bx-show me-1"></i> รายละเอียดการโอน
-                                                                    </a>
-                                                                <?php } ?>
-                                                                <a class="dropdown-item" href="<?php echo ($t1['status_user'] === 'person') ? 'edit_invoice_person.php?receipt_id=' . $t1['receipt_id'] : 'edit_invoice_corporation.php?receipt_id=' . $t1['receipt_id']; ?>">
-                                                                    <i class="bx bx-show me-1"></i> แก้ไขข้อมูล
-                                                                </a>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                                                <a class="dropdown-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="cancel" href="javascript:void(0);" onclick="confirmcancel('<?= $t1['receipt_id']; ?>')">
-                                                                    <i class=" bx bx-show me-1 "></i> ยกเลิกใบเสร็จ
-                                                                    <script src=" https://code.jquery.com/jquery-2.1.3.min.js"></script>
-                                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
-                                                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
-                                                                    <script>
-                                                                        function confirmcancel(receipt_id) {
-                                                                            swal({
-                                                                                    title: "คำเตือน",
-                                                                                    text: "เมื่อคุณกด 'ยืนยันการยกเลิก' ระบบจะทำงานยกเลิกใบเสร็จรับเงิน และจะไม่สามารถนำกลับมาได้อีก",
-                                                                                    type: "warning",
-                                                                                    showCancelButton: true,
-                                                                                    confirmButtonColor: "#DD6B55",
-                                                                                    confirmButtonText: "ยืนยันการยกเลิก",
-                                                                                    cancelButtonText: "เลิกทำ",
-                                                                                    closeOnConfirm: false
-                                                                                },
-                                                                                function(isConfirm) {
-                                                                                    if (isConfirm) {
-                                                                                        window.location = "cancel_invoice.php?receipt_id=" + receipt_id;
-                                                                                    }
-                                                                                });
-                                                                        }
-                                                                    </script>
-                                                                </a>
+                                    <div class="col-lg-8 d-flex align-items-stretch">
+                                        <div class="card w-100">
+                                            <div class="card-body p-4">
+                                                <div class="table-responsive">
+                                                    <div class="invoice-header d-flex align-items-center border-bottom p-3">
+                                                        <h4 class="font-medium text-uppercase mb-0">รายละเอียดใบเสร็จ</h4>
+                                                    </div>
+                                                    <?php foreach ($result as $t1) { ?>
+                                                        <div class="modal fade" id="transferModal<?= $t1['receipt_id']; ?>" tabindex="-1" aria-labelledby="transferModalLabel<?= $t1['receipt_id']; ?>" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="transferModalLabel<?= $t1['receipt_id']; ?>">รายละเอียดการโอน</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body"></div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                            <?php $countrow++;
-                                            } ?>
-                                        </tbody>
-                                    </table>
-                                    <div class="text-center mt-4">
-                                        <ul class="pagination justify-content-center">
-                                            <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
-                                                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
-                                                    <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
-                                                </li>
-                                            <?php } ?>
-                                        </ul>
+                                                    <?php } ?>
+                                                    <div id="pdfViewer">
+                                                        <?php
+                                                        if (isset($_GET['receipt_id'])) {
+                                                            $receipt_id = $_GET['receipt_id'];
+                                                            $pdf_path = "path/to/pdf/{$receipt_id}.pdf";
+                                                            if (file_exists($pdf_path)) {
+                                                        ?>
+                                                                <iframe src="<?= $pdf_path; ?>" width="100%" height="600" style="border: none;"></iframe>
+                                                        <?php
+                                                            } else {
+                                                                echo "ไม่พบไฟล์ PDF";
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
+                                <?php
+                                function thai_date($date)
+                                {
+                                    $months = [
+                                        'ม.ค', 'ก.พ', 'มี.ค', 'เม.ย', 'พ.ค', 'มิ.ย',
+                                        'ก.ค', 'ส.ค', 'ก.ย', 'ต.ค', 'พ.ย', 'ธ.ค'
+                                    ];
+
+                                    $timestamp = strtotime($date);
+                                    $thai_year = date(' Y', $timestamp) + 543;
+                                    $thai_date = date('j ', $timestamp) . $months[date('n', $timestamp) - 1] . ' ' . $thai_year;
+
+                                    return $thai_date;
+                                }
+
+                                ?>
+                                <script>
+                                    function openDetails(receiptId, ref1) {
+                                        openPDF(receiptId);
+                                    }
+
+                                    function openPDF(receiptId) {
+                                        var pdfURL = "invoice_confirm.php?receipt_id=" + receiptId + "&ACTION=VIEW";
+                                        var pdfViewer = document.getElementById("pdfViewer");
+                                        console.log(pdfViewer);
+                                        var iframe = document.createElement("iframe");
+                                        iframe.src = pdfURL;
+                                        iframe.width = "100%";
+                                        iframe.height = "1000";
+                                        iframe.style.border = "none";
+                                        pdfViewer.innerHTML = "";
+                                        pdfViewer.appendChild(iframe);
+                                        var statusDonatURL = 'get_status_donat.php?receipt_id=' + receiptId;
+                                        fetch(statusDonatURL)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.status_donat === 'online') {
+                                                    var transferButton = document.createElement("button");
+                                                    transferButton.className = "btn btn-danger";
+                                                    transferButton.textContent = "รายละเอียดการโอน";
+                                                    transferButton.onclick = function() {
+                                                        openTransferModal(receiptId);
+                                                    };
+
+                                                    var textEndDiv = document.createElement("div");
+                                                    textEndDiv.className = "text-end";
+                                                    textEndDiv.appendChild(transferButton);
+                                                    pdfViewer.appendChild(textEndDiv);
+                                                } else {
+                                                    console.log('Status_donat is not "online".');
+                                                }
+                                            })
+                                            .catch(error => console.error('Error:', error));
+                                    }
+
+                                    function openTransferModal(receiptId) {
+                                        $('#transferModal' + receiptId).modal('show');
+                                        var modalBody = document.querySelector('#transferModal' + receiptId + ' .modal-body');
+                                        var transferURL = 'paycheck.php?receipt_id=' + receiptId;
+                                        fetch(transferURL)
+                                            .then(response => response.text())
+                                            .then(data => {
+                                                modalBody.innerHTML = data;
+                                            })
+                                            .catch(error => console.error('Error:', error));
+                                    }
+                                </script>
+
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <?php
                 include('conf/footer.php');
