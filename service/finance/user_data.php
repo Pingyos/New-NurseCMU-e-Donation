@@ -78,14 +78,15 @@ include('conf/head.php');
                                                                 <i class="ti ti-dots-vertical fs-6"></i>
                                                             </a>
                                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <li>
+                                                                <!-- <li>
                                                                     <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-plus"></i>Add</a>
-                                                                </li>
+                                                                </li> -->
+                                                                <a class="dropdown-item d-flex align-items-center gap-3" href="<?php echo ($t1['status_user'] == 'corporation') ? 'update_user_corporation.php?user_id=' . $t1['user_id'] : 'update_user_person.php?user_id=' . $t1['user_id']; ?>">
+                                                                    <i class="fs-4 ti ti-edit"></i>อัพเดทข้อมูล
+                                                                </a>
+
                                                                 <li>
-                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-edit"></i>Edit</a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-trash"></i>Delete</a>
+                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-trash"></i>ลบข้อมูล</a>
                                                                 </li>
                                                             </ul>
                                                         </div>

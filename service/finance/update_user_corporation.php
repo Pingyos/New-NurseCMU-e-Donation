@@ -18,45 +18,28 @@ include('conf/head.php');
                     <div class="col-lg-12 d-flex align-items-stretch">
                         <div class="card w-100">
                             <div class="card-body p-4">
-                                <h5 class="card-title fw-semibold mb-4">แก้ไขข้อมูลการบริจาค</h5>
+                                <h5 class="card-title fw-semibold mb-4">อัพเดทข้อมูล นิติบุคลล/บริษัท</h5>
                                 <div class="card">
                                     <div class="card-body">
                                         <?php
-                                        if (isset($_GET['id'])) {
+                                        if (isset($_GET['user_id'])) {
                                             require_once 'conf/connection.php';
                                             $stmt = $conn->prepare("SELECT * FROM `user` WHERE user_id=?");
-                                            $stmt->execute([$_GET['id']]);
+                                            $stmt->execute([$_GET['user_id']]);
                                             $row = $stmt->fetch(PDO::FETCH_ASSOC);
                                         }
                                         ?>
                                         <form method="post" enctype="multipart/form-data">
                                             <div class="row">
-                                                <div class="col-md-3">
+                                                <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <label for="name_title" class="form-label">คำนำหน้าชื่อ</label>
-                                                        <input type="text" name="name_title" class="form-control" list="cars" value="<?= $row['name_title']; ?>">
-                                                        <datalist id="cars">
-                                                            <option value="นาย" />
-                                                            <option value="นาง" />
-                                                            <option value="นางสาว" />
-                                                        </datalist>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="mb-3">
-                                                        <label for="rec_name" class="form-label">ชื่อ</label>
+                                                        <label for="rec_name" class="form-label">นิติบุคลล/บริษัท</label>
                                                         <input type="text" name="rec_name" class="form-control" value="<?= $row['rec_name']; ?>">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <label for="rec_surname" class="form-label">นามสกุล</label>
-                                                        <input type="text" name="rec_surname" class="form-control" value="<?= $row['rec_surname']; ?>">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="mb-3">
-                                                        <label for="rec_idname" class="form-label">เลขประจำตัวประชาชน</label>
+                                                        <label for="rec_idname" class="form-label">เลขประจำตัวประชาชน/เลขประจำตัวผู้เสียภาษี</label>
                                                         <input type="text" name="rec_idname" id="rec_idname" value="<?= $row['rec_idname']; ?>" class="form-control" />
                                                     </div>
                                                 </div>
@@ -108,10 +91,17 @@ include('conf/head.php');
                                                         <input type="text" name="zip_code" class="form-control" value="<?= $row['zip_code']; ?>">
                                                     </div>
                                                 </div>
+                                                <input type="hidden" name="user_id" value="<?= $row['user_id']; ?>">
+                                                <input type="hidden" name="name_title" value="<?= $row['name_title']; ?>">
+                                                <input type="hidden" name="rec_surname" value="<?= $row['rec_surname']; ?>">
+                                                <input type="hidden" name="status_donat" value="<?= $row['status_donat']; ?>">
+                                                <input type="hidden" name="status_user" value="<?= $row['status_user']; ?>">
+                                                <input type="hidden" name="status_receipt" value="<?= $row['status_receipt']; ?>">
                                             </div>
                                             <button type="submit" class="btn btn-primary">อัพเดทข้อมูล</button>
                                         </form>
                                         <?php
+                                        require_once 'update_user_add.php';
                                         // echo '<pre>';
                                         // print_r($_POST);
                                         // echo '</pre>';
