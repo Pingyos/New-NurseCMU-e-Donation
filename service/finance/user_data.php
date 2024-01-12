@@ -24,7 +24,7 @@ include('conf/head.php');
                                             <tr>
                                                 <th>ลำดับ</th>
                                                 <th>ชื่อ-สกุล</th>
-                                                <th>ทีอยู่</th>
+                                                <th>ที่อยู่</th>
                                                 <th>#</th>
                                             </tr>
                                         </thead>
@@ -86,7 +86,7 @@ include('conf/head.php');
                                                                 </a>
 
                                                                 <li>
-                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-trash"></i>ลบข้อมูล</a>
+                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="javascript:void(0);" onclick="confirmcancel('<?= $t1['user_id']; ?>')"><i class="fs-4 ti ti-trash"></i>ลบข้อมูล</a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -100,7 +100,7 @@ include('conf/head.php');
                                             <tr>
                                                 <th>ลำดับ</th>
                                                 <th>ชื่อ-สกุล</th>
-                                                <th>ทีอยู่</th>
+                                                <th>ที่อยู่</th>
                                                 <th>#</th>
                                             </tr>
                                         </tfoot>
@@ -117,6 +117,29 @@ include('conf/head.php');
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+    <script>
+        function confirmcancel(user_id) {
+            swal({
+                title: "คำเตือน",
+                text: "เมื่อคุณกด 'ยืนยันการลบข้อมูล' ระบบจะทำการลบข้อมูล และจะไม่สามารถนำกลับมาได้อีก",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "ยืนยันการลบข้อมูล",
+                cancelButtonText: "เลิกทำ",
+                closeOnConfirm: false
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    window.location = "del_user.php?user_id=" + user_id;
+                }
+            });
+        }
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
