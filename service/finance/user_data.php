@@ -19,111 +19,91 @@ include('conf/head.php');
                         <div class="card w-100">
                             <div class="card-body p-4">
                                 <div class="table-responsive">
-                                    <table class="table text-nowrap mb-0 align-middle">
-                                        <thead class="text-dark fs-4">
+                                    <table id="myTable" class="table table-striped" style="width:100%">
+                                        <thead>
                                             <tr>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">ลำดับ</h6>
-                                                </th>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">ชื่อ-นามสกุล</h6>
-                                                </th>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">หมายเลขผู้เสียภาษี</h6>
-                                                </th>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">จำนวน</h6>
-                                                </th>
-                                                <th class="border-bottom-0">
-                                                    <h6 class="fw-semibold mb-0">รายละเอียด</h6>
-                                                </th>
+                                                <th>ลำดับ</th>
+                                                <th>ชื่อ-สกุล</th>
+                                                <th>ทีอยู่</th>
+                                                <th>#</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             require_once 'conf/connection.php';
-                                            $rowsPerPage = 10;
-                                            $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                                            $offset = ($page - 1) * $rowsPerPage;
-
-                                            $stmt = $conn->prepare("SELECT * FROM `user`  ORDER BY rec_name ASC LIMIT :offset, :rows");
-                                            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-                                            $stmt->bindParam(':rows', $rowsPerPage, PDO::PARAM_INT);
+                                            $stmt = $conn->prepare("SELECT * FROM `user` WHERE `status_donat` = 'offline' AND `status_receipt` = 'yes' ORDER BY rec_name ASC;
+                                            ");
                                             $stmt->execute();
                                             $result = $stmt->fetchAll();
-
-                                            $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM `user`");
-                                            $countStmt->execute();
-                                            $totalRows = $countStmt->fetchColumn();
-                                            $totalPages = ($totalRows > 0) ? ceil($totalRows / $rowsPerPage) : 1;
-
-                                            $countrow = ($page - 1) * $rowsPerPage + 1;
+                                            $countrow = 1;
                                             foreach ($result as $t1) {
                                             ?>
                                                 <tr>
-                                                    <td class="border-bottom-0">
+                                                    <td>
                                                         <h6 class="fw-semibold mb-0"><?= $countrow ?></h6>
                                                     </td>
-                                                    <td class="border-bottom-0">
-                                                        <h6 class="fw-semibold mb-0"><?= $t1['name_title']; ?> <?= $t1['rec_name']; ?> <?= $t1['rec_surname']; ?></h6>
-                                                    </td>
-                                                    <td class="border-bottom-0">
-                                                        <h6 class="fw-semibold mb-0"><?= $t1['rec_idname']; ?></h6>
-                                                    </td>
-                                                    <td class="border-bottom-0">
-                                                        <h6 class="fw-semibold mb-0"><?= $t1['rec_idname']; ?></h6>
-                                                    </td>
-                                                    <td class="border-bottom-0">
-                                                        <div class="dropdown">
-                                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                                                <i class="bx bx-dots-vertical-rounded"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item" href="updata_user_data.php?id=<?= $t1['user_id']; ?>">
-                                                                    <i class="bx bx-show me-1"></i> อัพเดทข้อมูล
-                                                                </a>
-                                                                <a class="dropdown-item" data-toggle="tooltip" data-placement="top" title="" data-original-title="cancel" href="javascript:void(0);" onclick="confirmcancel('<?= $t1['receipt_id']; ?>')">
-                                                                    <i class=" bx bx-show me-1 "></i> ลบข้อมูล
-                                                                    <script src=" https://code.jquery.com/jquery-2.1.3.min.js"></script>
-                                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
-                                                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
-                                                                    <script>
-                                                                        function confirmcancel(receipt_id) {
-                                                                            swal({
-                                                                                    title: "คำเตือน",
-                                                                                    text: "เมื่อคุณกด 'ยืนยันการยกเลิก' ระบบจะทำงานยกเลิกใบเสร็จรับเงิน และจะไม่สามารถนำกลับมาได้อีก",
-                                                                                    type: "warning",
-                                                                                    showCancelButton: true,
-                                                                                    confirmButtonColor: "#DD6B55",
-                                                                                    confirmButtonText: "ยืนยันการยกเลิก",
-                                                                                    cancelButtonText: "เลิกทำ",
-                                                                                    closeOnConfirm: false
-                                                                                },
-                                                                                function(isConfirm) {
-                                                                                    if (isConfirm) {
-                                                                                        window.location = "cancel_invoice.php?receipt_id=" + receipt_id;
-                                                                                    }
-                                                                                });
-                                                                        }
-                                                                    </script>
-                                                                </a>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <?php
+                                                            $profileImage = '';
+                                                            switch ($t1['name_title']) {
+                                                                case 'นาย':
+                                                                    $profileImage = 'user-1.jpg';
+                                                                    break;
+                                                                case 'นาง':
+                                                                    $profileImage = 'user-2.jpg';
+                                                                    break;
+                                                                case 'นางสาว':
+                                                                    $profileImage = 'user-3.jpg';
+                                                                    break;
+                                                                default:
+                                                                    $profileImage = 'user-4.jpg';
+                                                                    break;
+                                                            }
+                                                            ?>
+                                                            <img src="../assets/images/profile/<?= $profileImage ?>" class="rounded-circle" width="40" height="40">
+                                                            <div class="ms-3">
+                                                                <h6 class="fs-4 fw-semibold mb-0"><?= $t1['name_title']; ?> <?= $t1['rec_name']; ?> <?= $t1['rec_surname']; ?></h6>
                                                             </div>
                                                         </div>
                                                     </td>
+
+
+                                                    <td>
+                                                        <p class="mb-0 fw-normal"><?= $t1['address']; ?> <?= $t1['road']; ?> <?= $t1['districts']; ?> <?= $t1['amphures']; ?> <?= $t1['provinces']; ?> <?= $t1['zip_code']; ?></p>
+                                                    </td>
+                                                    <td>
+                                                        <div class="dropdown dropstart">
+                                                            <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <i class="ti ti-dots-vertical fs-6"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <li>
+                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-plus"></i>Add</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-edit"></i>Edit</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-trash"></i>Delete</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
                                                 </tr>
-                                            <?php $countrow++;
+                                            <?php
+                                                $countrow++;
                                             } ?>
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ลำดับ</th>
+                                                <th>ชื่อ-สกุล</th>
+                                                <th>ทีอยู่</th>
+                                                <th>#</th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
-                                    <div class="text-center mt-4">
-                                        <ul class="pagination justify-content-center">
-                                            <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
-                                                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
-                                                    <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
-                                                </li>
-                                            <?php } ?>
-                                        </ul>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -136,8 +116,17 @@ include('conf/head.php');
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
+    <script>
+        $(document).ready(function() {
+            $("#myTable").DataTable();
+        });
+    </script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
-    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/sidebarmenu.js"></script>
     <script src="../assets/js/app.min.js"></script>

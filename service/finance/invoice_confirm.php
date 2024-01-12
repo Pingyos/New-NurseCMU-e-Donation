@@ -428,17 +428,19 @@ if ($count > 0) {
 		</tr>
 
         <tr>
-			<tdalign="right" colspan="2"><b>รายการ/Description</b><br>' . $inv_mst_data_row['edo_description'] . ' </tdalign=>
+			<td colspan="2" ><b>รายการ/Description</b><br>' . $inv_mst_data_row['edo_description'] . ' </td>
 		</tr>
 
 		<tr>
 			<td align="right" colspan="2" ><b>จำนวนเงิน/Amount : </b>' . add_comma($inv_mst_data_row['amount']) . ' บาท </td>
 		</tr>
+
 		<br>
 		<tr>
 			<td style="text-align: right;"><b>จำนวนเงินรวม/Total</b></td>
 			<td align="right">' . add_comma($inv_mst_data_row['amount']) . ' บาท</td>
 		</tr>
+        <br>
 		<br>
 		<tr>
 			<td colspan="2" ><b>รวมทั้งหมด : ' . add_comma($inv_mst_data_row['amount']) . ' บาท (' . Convert($inv_mst_data_row['amount']) . ')</b></td>
@@ -451,8 +453,6 @@ if ($count > 0) {
 				<b>ชำระโดย/Pay by : ' . $inv_mst_data_row['payby'] . ' </b>
 			</td>
 		</tr>
-		<br>
-		<br>
 		<tr>
 			<td></td>
 			<td align="right">(นางสาวชนิดา ต้นพิพัฒน์)<br>เจ้าหน้าที่ผู้รับเงิน/Collector<br>วันที่ : ' . $rec_day . ' ' . $rec_month . ' ' . $rec_yearth . '</td>
@@ -464,9 +464,8 @@ if ($count > 0) {
 			<td colspan="2" style="border-bottom: solid black 1px;"></td>
 		</tr>
 		<tr>
-
-		<br>
-		<br>
+        <br>
+        <br>
 		<br>
 		<br>
 		<br>
