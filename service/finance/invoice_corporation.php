@@ -26,6 +26,62 @@ include('conf/head.php');
                                                 <h6 class="form-label">กรอกข้อมูลผู้บริจาค</h6>
                                             </div>
                                             <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="mb-3">
+                                                        <div id="reg_urse" class="form-group">
+                                                            <?php
+                                                            require_once 'conf/connection.php';
+                                                            $query = "SELECT name_title, rec_name, rec_surname, rec_tel, rec_email, rec_idname, address, road, districts, amphures, provinces, zip_code 
+                                                                    FROM user 
+                                                                    WHERE status_donat = 'offline' AND status_user = 'corporation'
+                                                                    ORDER BY rec_name ASC";
+
+                                                            $result = $conn->query($query);
+                                                            ?>
+                                                            <select class="form-control" id="userDropdown">
+                                                                <option value="">รายชื่อผู้บริจาค</option>
+                                                                <?php
+                                                                foreach ($result as $row) {
+                                                                    echo '<option value="' . $row["rec_name"] . '" 
+                                                                                data-name-title="' . $row["name_title"] . '" 
+                                                                                data-rec-name="' . $row["rec_name"] . '" 
+                                                                                data-rec-surname="' . $row["rec_surname"] . '" 
+                                                                                data-rec-idname="' . $row["rec_idname"] . '" 
+                                                                                data-rec-tel="' . $row["rec_tel"] . '" 
+                                                                                data-rec-email="' . $row["rec_email"] . '" 
+                                                                                data-address="' . $row["address"] . '" 
+                                                                                data-road="' . $row["road"] . '" 
+                                                                                data-districts="' . $row["districts"] . '" 
+                                                                                data-amphures="' . $row["amphures"] . '" 
+                                                                                data-provinces="' . $row["provinces"] . '" 
+                                                                                data-zip-code="' . $row["zip_code"] . '">
+                                                                            ' . $row["rec_name"] . ' ' . $row["rec_surname"] . ' ' . $row["address"] . ' ' . $row["road"] . ' ' . $row["districts"] . ' ' . $row["amphures"] . ' ' . $row["provinces"] . ' ' . $row["zip_code"] . '
+                                                                        </option>';
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                    document.getElementById('userDropdown').addEventListener('change', function() {
+                                                        var selectedOption = this.options[this.selectedIndex];
+                                                        console.log(selectedOption.dataset);
+
+                                                        if (selectedOption) {
+                                                            document.getElementById('selectedName').value = selectedOption.dataset.recName;
+                                                            document.getElementById('selectedIdName').value = selectedOption.dataset.recIdname;
+                                                            document.getElementById('selectedTel').value = selectedOption.dataset.recTel;
+                                                            document.getElementById('selectedEmail').value = selectedOption.dataset.recEmail;
+                                                            document.getElementById('selectedAddress').value = selectedOption.dataset.address;
+                                                            document.getElementById('selectedRoad').value = selectedOption.dataset.road;
+                                                            document.getElementById('provincesInput').value = selectedOption.dataset.provinces;
+                                                            document.getElementById('amphuresInput').value = selectedOption.dataset.amphures;
+                                                            document.getElementById('districtsInput').value = selectedOption.dataset.districts;
+                                                            document.getElementById('selectedZipCode').value = selectedOption.dataset.zipCode;
+                                                        }
+                                                    });
+                                                </script>
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
                                                         <label for="rec_name" class="form-label">นิติบุคลล/บริษัท</label>
@@ -212,6 +268,7 @@ include('conf/head.php');
                                         </form>
                                         <?php
                                         require_once 'invoice_add_all.php';
+                                        require_once 'invoice_user_add.php';
                                         // echo '<pre>';
                                         // print_r($_POST);
                                         // echo '</pre>';
