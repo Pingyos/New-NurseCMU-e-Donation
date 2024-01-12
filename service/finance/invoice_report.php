@@ -256,7 +256,7 @@ include('conf/head.php');
                                                             $sql .= " AND receipt_cc = :receipt_cc";
                                                         }
 
-                                                        $sql .= " ORDER BY receipt_id DESC";
+                                                        $sql .= " ORDER BY rec_date_out ASC";
                                                         $offset = ($currentPage - 1) * $itemsPerPage;
                                                         $sql .= " LIMIT :itemsPerPage OFFSET :offset";
                                                         $stmt = $conn->prepare($sql);

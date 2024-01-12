@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $sql .= " AND receipt_cc = :receipt_cc ";
     }
 
-    $sql .= " ORDER BY id_receipt DESC";
+    $sql .= " ORDER BY rec_date_out ASC";
 
     require_once 'conf/connection.php';
 
