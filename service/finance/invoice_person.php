@@ -21,7 +21,7 @@ include('conf/head.php');
                                 <h5 class="card-title fw-semibold mb-4">ออกใบเสร็จรับเงิน สำหรับ บุคคล</h5>
                                 <div class="card">
                                     <div class="card-body">
-                                        <form method="post">
+                                        <form method="post" id="edoForm" onsubmit="return disableSaveButton()">
                                             <div class="mb-3">
                                                 <h6 class="form-label">กรอกข้อมูลผู้บริจาค</h6>
                                             </div>
@@ -280,11 +280,18 @@ include('conf/head.php');
                                                 <input type="hidden" name="pdflink" value="https://app.nurse.cmu.ac.th/edonation/finance/pdf_maker_offline.php?id=id&ACTION=VIEW">
                                                 <input type="hidden" name="receipt_cc" value="confirm">
                                             </div>
-                                            <button type="submit" class="btn btn-primary" id="confirmationButton" disabled>ยืนยันการกรอกข้อมูล</button>
+                                            <button type="submit" class="btn btn-primary" id="saveButton">ยืนยันการกรอกข้อมูล</button>
                                             <script>
-                                                window.addEventListener("load", function() {
-                                                    document.getElementById("confirmationButton").removeAttribute("disabled");
-                                                });
+                                                function disableSaveButton() {
+                                                    document.getElementById("saveButton").innerHTML = "กรุณารอสักครู่ ระบบกำลังจัดส่ง email ไปยังผู้บริจาาค";
+                                                    document.getElementById("saveButton").disabled = true;
+                                                    setTimeout(function() {
+                                                        document.getElementById("saveButton").innerHTML = "ยืนยันการออกใบเสร็จ(บุคคล)";
+                                                        document.getElementById("saveButton").disabled = false;
+                                                    }, 5000);
+
+                                                    return true;
+                                                }
                                             </script>
                                         </form>
                                         <?php

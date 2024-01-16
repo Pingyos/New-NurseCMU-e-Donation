@@ -234,6 +234,7 @@ if (
                         // VnaAYBFqNRPYNLKLeBA3Uk9kFFyFsYdUbw8SmU9HNWf 
                         $sToken = ["6GxKHxqMlBcaPv1ufWmDiJNDucPJSWPQ42sJwPOsQQL"]; // เพิ่ม Token ของคุณที่นี่
                         $sMessage = "";
+                        $sMessage .= "โครงการ: " . $edo_description . "\n";
                         $sMessage .= "\n";
                         $sMessage .= "เลขที่ใบเสร็จ: " . $receipt . "\n";
                         $sMessage .= "$user_type : " . $name_title . " " . $rec_name . " " . $rec_surname . "\n";
