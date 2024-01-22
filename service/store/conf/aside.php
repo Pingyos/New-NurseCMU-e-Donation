@@ -24,18 +24,22 @@
                         <span class="hide-menu">รายละเอียดข้อมูล</span>
                     </a>
                 </li>
+                <li class="nav-small-cap">
+                    <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                    <span class="hide-menu">การจัดส่ง</span>
+                </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="user_data.php" aria-expanded="false">
+                    <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
                         <span>
-                            <i class="ti ti-user-plus"></i>
+                            <i class="ti ti-article"></i>
                         </span>
-                        <span class="hide-menu">ข้อมูลผู้บริจาค</span>
+                        <span class="hide-menu">บันทึกการจัดส่ง</span>
                     </a>
                 </li>
 
                 <li class="nav-small-cap">
                     <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                    <span class="hide-menu">ออกใบเสร็จ</span>
+                    <span class="hide-menu">รายการจัดส่ง</span>
                 </li>
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="store_order.php" aria-expanded="false">
@@ -47,10 +51,49 @@
                                 <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
                             </svg>
                         </span>
-                        <span class="hide-menu">ใบจัดส่ง</span>
+                        <span class="hide-menu">ทั้งหมด</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="store_order.php?items=1" aria-expanded="false">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-printer" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                                <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                                <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                            </svg>
+                        </span>
+                        <span class="hide-menu">รอส่ง</span>
                     </a>
                 </li>
 
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="store_order.php?items=2" aria-expanded="false">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-printer" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                                <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                                <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                            </svg> </span>
+                        <span class="hide-menu">จัดส่งสำเร็จ</span>
+
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="store_order.php?items=3" aria-expanded="false">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-printer" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                                <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                                <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                            </svg> </span>
+                        <span class="hide-menu">ยกเลิก</span>
+
+                    </a>
+                </li>
                 <li class="nav-small-cap">
                     <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                     <span class="hide-menu">ข้อมูลใบเสร็จ</span>

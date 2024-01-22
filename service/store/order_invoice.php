@@ -8,7 +8,7 @@ $selectedIdsArray = explode(",", $selectedIds);
 
 require_once 'conf/connection.php';
 $placeholders = implode(',', array_fill(0, count($selectedIdsArray), '?'));
-$stmt = $conn->prepare("SELECT receipt_id, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, provinces, districts, rec_idname, address, road, amphures, zip_code, items_set FROM `store` WHERE `receipt_id` IN ($placeholders);");
+$stmt = $conn->prepare("SELECT receipt_id, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, provinces, districts, rec_idname, address, road, amphures, zip_code FROM receipt WHERE `receipt_id` IN ($placeholders);");
 $stmt->execute($selectedIdsArray);
 $result = $stmt->fetchAll();
 $count = count($result);

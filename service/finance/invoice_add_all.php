@@ -108,21 +108,6 @@ if (
                     $updateReceiptResult = $updateReceiptStmt->execute();
 
                     if ($updateReceiptResult) {
-                        $conn->commit();
-                        $insertStoreSql = "INSERT INTO store (id, ref1, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, rec_idname, address, road, districts, amphures, provinces, zip_code, rec_date_s, rec_date_out, amount, payby, edo_name, other_description, edo_pro_id, edo_description, edo_objective, comment, status_donat, status_user, status_receipt, resDesc, rec_time, pdflink, receipt_cc, dateCreate, items, items_set)
-                        SELECT id, ref1, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, rec_idname, address, road, districts, amphures, provinces, zip_code, rec_date_s, rec_date_out, amount, payby, edo_name, other_description, edo_pro_id, edo_description, edo_objective, comment, status_donat, status_user, status_receipt, resDesc, rec_time, pdflink, receipt_cc, dateCreate,1,
-                        CASE
-                            WHEN amount BETWEEN 1000.00 AND 2999.99 THEN 'A'
-                            WHEN amount BETWEEN 3000.00 AND 99999.99 THEN 'B'
-                            WHEN amount >= 100000.00 THEN 'C'
-                            ELSE 'D'
-                        END AS items_set
-                        FROM receipt
-                        WHERE id = :id";
-
-                        $insertStoreStmt = $conn->prepare($insertStoreSql);
-                        $insertStoreStmt->bindParam(':id', $id, PDO::PARAM_INT);
-                        $insertStoreResult = $insertStoreStmt->execute();
                         $email_receiver = $_POST['rec_email'];
                         $edo_description = $_POST['edo_description'];
                         $name_title = $_POST['name_title'];

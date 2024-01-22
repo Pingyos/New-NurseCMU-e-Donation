@@ -2,6 +2,7 @@
     <div class="card-body">
         <form>
             <?php
+            $isMatching = false;
             if (isset($_GET['receipt_id'])) {
                 $receiptId = $_GET['receipt_id'];
                 require_once 'conf/connection.php';
@@ -70,7 +71,7 @@
                                                         </div>
                                                         <div class="col-6 mb-3">
                                                             <p class="mb-1 fs-2">ยอดเงินบริจาค</p>
-                                                            <h6 class="fw-semibold mb-0"><?= number_format($row['amount'], 2, '.', ','); ?> บาท</h6>
+                                                            <h6 class="fw-semibold mb-0"><?= $row['amount']; ?> บาท</h6>
                                                         </div>
                                                         <div class="col-6 mb-3">
                                                             <p class="mb-1 fs-2">บริจาคผ่านระบบ </p>
