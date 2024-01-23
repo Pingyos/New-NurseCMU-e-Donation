@@ -63,7 +63,7 @@ include('conf/head.php');
                                                         </script>';
                                                 } else {
                                                     // เพิ่มข้อมูลลงในตาราง store
-                                                    $stmt_insert = $conn->prepare("INSERT INTO store (id, order_ref1, order_receipt, order_tel, order_email, order_description, order_name, order_address, order_set, status_order) VALUES (:id, :order_ref1, :order_receipt, :order_tel, :order_email, :order_description, :order_name, :order_address, :order_set, :status_order)");
+                                                    $stmt_insert = $conn->prepare("INSERT INTO store (id, order_ref1, order_receipt, order_tel, order_email, order_description, order_name, order_address, amount, status_order, storage_id, order_set) VALUES (:id, :order_ref1, :order_receipt, :order_tel, :order_email, :order_description, :order_name, :order_address, :amount, :status_order, :storage_id, :order_set)");
 
                                                     $stmt_insert->bindParam(':id', $result['id']);
                                                     $stmt_insert->bindParam(':order_ref1', $result['ref1']);
@@ -72,32 +72,43 @@ include('conf/head.php');
                                                     $stmt_insert->bindParam(':order_email', $result['rec_email']);
                                                     $stmt_insert->bindParam(':order_description', $result['edo_description']);
 
-                                                    // ตัวแปร order_name, order_address ไม่สามารถใช้ bindParam ได้
                                                     $order_name = $result['name_title'] . ' ' . $result['rec_name'] . ' ' . $result['rec_surname'];
                                                     $order_address = $result['address'] . ' ' . $result['road'] . ' ' . $result['districts'] . ' ' . $result['amphures'] . ' ' . $result['provinces'] . ' ' . $result['zip_code'];
 
                                                     $stmt_insert->bindParam(':order_name', $order_name);
                                                     $stmt_insert->bindParam(':order_address', $order_address);
 
-                                                    // เพิ่มเงื่อนไขตาม order_amount
-                                                    $order_amount = $result['amount'];
-                                                    if ($order_amount >= 1 && $order_amount <= 999.99) {
-                                                        $order_set = 'not order';
-                                                    } elseif ($order_amount >= 1000.00 && $order_amount <= 3000.00) {
-                                                        $order_set = 'order a';
-                                                    } elseif ($order_amount >= 3001.00 && $order_amount <= 99999.99) {
-                                                        $order_set = 'order b';
-                                                    } elseif ($order_amount >= 100000.00 && $order_amount <= 199999.00) {
-                                                        $order_set = 'order c';
-                                                    } else {
-                                                        $order_set = 'unknown';
-                                                    }
-
-                                                    $stmt_insert->bindParam(':order_set', $order_set);
+                                                    $stmt_insert->bindParam(':amount', $result['amount']);
                                                     $stmt_insert->bindParam(':status_order', $_POST['status_order']);
+
+                                                    // Initialize $order_set
+                                                    $order_set = '';
+
+                                                    $stmt_storage = $conn->prepare("SELECT * FROM storage ORDER BY max ASC");
+                                                    $stmt_storage->execute();
+                                                    $storage_result = $stmt_storage->fetchAll();
+
+                                                    // หาค่า max ที่มี order_amount น้อยกว่า order_amount ปัจจุบัน
+                                                    foreach ($storage_result as $storage_row) {
+                                                        $max_value = $storage_row['max'];
+                                                        $items_set = $storage_row['items_set'];
+                                                        $storage_id = $storage_row['id'];
+
+                                                        if ($result['amount'] < $max_value) {
+                                                            $order_set = $items_set;
+                                                            break;
+                                                        }
+                                                    }
+                                                    $stmt_insert->bindParam(':storage_id', $storage_id);
+                                                    $stmt_insert->bindParam(':order_set', $order_set);
 
                                                     if ($stmt_insert->execute()) {
                                                         // ถ้า INSERT สำเร็จ
+                                                        // ลดจำนวน items ในตาราง storage ที่มี storage_id ตรงกับ id ในตาราง storage ลงทีละหนึ่ง (1)
+                                                        $stmt_update_storage = $conn->prepare("UPDATE storage SET items = items - 1 WHERE id = :storage_id");
+                                                        $stmt_update_storage->bindParam(':storage_id', $storage_id);
+                                                        $stmt_update_storage->execute();
+
                                                         echo '
                                                         <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
                                                         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
@@ -118,22 +129,22 @@ include('conf/head.php');
                                                     } else {
                                                         // ถ้า INSERT ไม่สำเร็จ
                                                         echo '
-                                                    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
-                                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
-                                                    <script>
-                                                        $(document).ready(function(){
-                                                            swal({
-                                                                title: "บันทึกการจัดส่งไม่สำเร็จ",
-                                                                text: "กรุณารอสักครู่",
-                                                                type: "error",
-                                                                timer: 2500,
-                                                                showConfirmButton: false
-                                                            }, function(){
-                                                                window.location.href = "order_check.php";
+                                                        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+                                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
+                                                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+                                                        <script>
+                                                            $(document).ready(function(){
+                                                                swal({
+                                                                    title: "บันทึกการจัดส่งไม่สำเร็จ",
+                                                                    text: "กรุณารอสักครู่",
+                                                                    type: "error",
+                                                                    timer: 2500,
+                                                                    showConfirmButton: false
+                                                                }, function(){
+                                                                    window.location.href = "order_check.php";
+                                                                });
                                                             });
-                                                        });
-                                                    </script>';
+                                                        </script>';
                                                     }
                                                 }
                                             } else {

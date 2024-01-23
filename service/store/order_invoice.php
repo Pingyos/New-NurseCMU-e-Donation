@@ -8,11 +8,14 @@ $selectedIdsArray = explode(",", $selectedIds);
 
 require_once 'conf/connection.php';
 $placeholders = implode(',', array_fill(0, count($selectedIdsArray), '?'));
-$stmt = $conn->prepare("SELECT receipt_id,ref1, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, provinces, districts, rec_idname, address, road, amphures, zip_code FROM receipt WHERE `receipt_id` IN ($placeholders);");
+$stmt = $conn->prepare("SELECT receipt_id, ref1, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, amount, provinces, districts, rec_idname, address, road, amphures, zip_code FROM receipt WHERE `receipt_id` IN ($placeholders);");
 $stmt->execute($selectedIdsArray);
+$stmt_storage = $conn->prepare("SELECT * FROM storage ORDER BY max ASC");
+$stmt_storage->execute();
+$storage_result = $stmt_storage->fetchAll();
+
 $result = $stmt->fetchAll();
 $count = count($result);
-
 
 if ($count > 0) {
     // Your existing PDF generation code
@@ -32,6 +35,20 @@ if ($count > 0) {
     $pdf->SetAutoPageBreak(true, 2);
 
     foreach ($result as $row) {
+        $order_amount = $row['amount'];
+        $order_set = '';
+
+        // หาค่า max ที่มี order_amount น้อยกว่า order_amount ปัจจุบัน
+        foreach ($storage_result as $storage_row) {
+            $max_value = $storage_row['max'];
+            $items_set = $storage_row['items_set'];
+
+            if ($order_amount < $max_value) {
+                $order_set = $items_set;
+                break;
+            }
+        }
+
         // Add a new page for each record
         $pdf->AddPage();
 
@@ -65,11 +82,10 @@ if ($count > 0) {
                 <td><b>หมายเลขออเดอร์ : </b>' . $row['ref1'] . '</td>
             </tr>
             <tr>
-                <td><b>รายการ : </b>ชุดของที่ระลึก ' . $row['items_set'] . '</td>
+                <td><b>รายการ : </b>ชุดของที่ระลึก ' . $row['items_set'] . ' ' . $order_set . '</td>
             </tr>
-
         </table>
-    ';
+        ';
 
         $pdf->writeHTML($content);
     }
