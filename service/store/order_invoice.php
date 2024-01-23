@@ -8,7 +8,7 @@ $selectedIdsArray = explode(",", $selectedIds);
 
 require_once 'conf/connection.php';
 $placeholders = implode(',', array_fill(0, count($selectedIdsArray), '?'));
-$stmt = $conn->prepare("SELECT receipt_id, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, provinces, districts, rec_idname, address, road, amphures, zip_code FROM receipt WHERE `receipt_id` IN ($placeholders);");
+$stmt = $conn->prepare("SELECT receipt_id,ref1, id_receipt, name_title, rec_name, rec_surname, rec_tel, rec_email, provinces, districts, rec_idname, address, road, amphures, zip_code FROM receipt WHERE `receipt_id` IN ($placeholders);");
 $stmt->execute($selectedIdsArray);
 $result = $stmt->fetchAll();
 $count = count($result);
@@ -16,7 +16,7 @@ $count = count($result);
 
 if ($count > 0) {
     // Your existing PDF generation code
-    $pdf = new TCPDF('L', PDF_UNIT, array(100, 75), true, 'UTF-8', false);
+    $pdf = new TCPDF('L', PDF_UNIT, array(100, 100), true, 'UTF-8', false);
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetHeaderData('', '', PDF_HEADER_TITLE, PDF_HEADER_STRING);
     $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
@@ -62,7 +62,7 @@ if ($count > 0) {
                 <td><b>โทรศัพท์ : </b>' . $row['rec_tel'] . '</td>
             </tr>
             <tr>
-                <td><b>หมายเลขออเดอร์ : </b>' . $row['id_receipt'] . '</td>
+                <td><b>หมายเลขออเดอร์ : </b>' . $row['ref1'] . '</td>
             </tr>
             <tr>
                 <td><b>รายการ : </b>ชุดของที่ระลึก ' . $row['items_set'] . '</td>
