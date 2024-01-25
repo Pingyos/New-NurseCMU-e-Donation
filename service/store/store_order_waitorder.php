@@ -20,9 +20,9 @@ include('conf/head.php');
                             <div class="card-body p-4">
                                 <div class="table-responsive">
                                     <div class="text-end md-3">
-                                        <button class="btn btn-primary btn-circle btn-xl me-1 mb-3 mb-lg-3" id="printButtonform1">
-                                            <i class="ti ti-printer fs-5"></i>
-                                        </button>
+                                        <a class="btn btn-primary btn-circle btn-xl me-1 mb-3 mb-lg-3" id="printButtonform1">
+                                            <i class="ti ti-printer fs-5"></i> พิมพ์ออเดอร์
+                                        </a>
                                         <script>
                                             document.addEventListener("DOMContentLoaded", function() {
                                                 var table = document.getElementById("myTable");
@@ -177,11 +177,151 @@ include('conf/head.php');
                                             </tr>
                                         </tfoot>
                                     </table>
+                                    <?php foreach ($result_receipt as $t1) { ?>
+                                        <div class="modal fade" id="transferModal<?= $t1['receipt_id']; ?>" tabindex="-1" aria-labelledby="transferModalLabel<?= $t1['receipt_id']; ?>" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="transferModalLabel<?= $t1['receipt_id']; ?>">
+                                                            รายละเอียดการจัดส่งของที่ระลึง</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <?php
+                                                        $order_amount = $t1['amount'];
+                                                        $order_set = '';
+                                                        $order_name = '';
+
+                                                        // ดึงข้อมูลจากตาราง storage
+                                                        $stmt_storage = $conn->prepare("SELECT * FROM storage ORDER BY max ASC");
+                                                        $stmt_storage->execute();
+                                                        $storage_result = $stmt_storage->fetchAll();
+
+                                                        // หาค่า max ที่มี order_amount น้อยกว่า order_amount ปัจจุบัน
+                                                        foreach ($storage_result as $storage_row) {
+                                                            $max_value = $storage_row['max'];
+                                                            $items_set = $storage_row['items_set'];
+                                                            $order_name = $storage_row['name'];
+
+                                                            if ($order_amount < $max_value) {
+                                                                $order_set = $items_set;
+                                                                break;
+                                                            }
+                                                        }
+                                                        ?>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="form-label text-end col-md-3">ชื่อผู้รับ:</label>
+                                                                    <div class="col-md-9">
+                                                                        <p class="form-control-static"><?= $t1['name_title'] . ' ' . $t1['rec_name'] . ' ' . $t1['rec_surname']; ?></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--/span-->
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="form-label text-end col-md-3">โทรศัพท์:</label>
+                                                                    <div class="col-md-9">
+                                                                        <p class="form-control-static"><?= $t1['rec_tel']; ?></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group row">
+                                                                        <label class="form-label text-end col-md-3">ที่อยู่จัดส่ง:</label>
+                                                                        <div class="col-md-9">
+                                                                            <p class="form-control-static">
+                                                                                <?= $t1['address'] . ' ' . $t1['road'] . ' ' . $t1['districts'] . ' ' . $t1['amphures'] . ' ' . $t1['provinces'] . ' ' . $t1['zip_code']; ?>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="form-label text-end col-md-3">หมายเลขออเดอร์:</label>
+                                                                    <div class="col-md-9">
+                                                                        <p class="form-control-static"><?= $t1['ref1']; ?></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--/span-->
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="form-label text-end col-md-3">รายการ:</label>
+                                                                    <div class="col-md-9">
+                                                                        <p class="form-control-static"><?= $order_set; ?> (<?= $order_name; ?>)</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="form-label text-end col-md-3">โครงการ:</label>
+                                                                    <div class="col-md-9">
+                                                                        <p class="form-control-static"><?= $t1['edo_description']; ?></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--/span-->
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="form-label text-end col-md-3">จำนวนเงิน:</label>
+                                                                    <div class="col-md-9">
+                                                                        <p class="form-control-static"><?= number_format($t1['amount'], 2); ?> บาท</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="form-label text-end col-md-3">วัน/เดือน/ปี:</label>
+                                                                    <div class="col-md-9">
+                                                                        <p class="form-control-static"><?= thai_date($t1['rec_date_out']); ?></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--/span-->
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="form-label text-end col-md-3">สถานะ:</label>
+                                                                    <div class="col-md-9">
+                                                                        <p class="form-control-static">
+                                                                            <?php if ($t1['resDesc'] == 'success') : ?>
+                                                                                <span class="mb-1 badge rounded-pill font-medium bg-success-subtle text-success">ยืนยันการชำระเงิน</span>
+                                                                            <?php else : ?>
+                                                                                <span class="mb-1 badge rounded-pill font-medium bg-danger-subtle text-danger">ยังไม่ได้รับการยืนยันการชำระเงิน กรุณาติดต่อผู้เกี่ยวข้อง</span>
+                                                                            <?php endif; ?>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a class="btn btn-primary btn-circle btn-xl me-1 mb-3 mb-lg-3" href="order_invoice.php?selectedIds=<?= $t1['receipt_id']; ?>&ACTION=VIEW" target="_blank">
+                                                                <i class="ti ti-printer fs-5"></i> พิมพ์ออเดอร์
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <?php
                 include('conf/footer.php');
@@ -190,6 +330,22 @@ include('conf/head.php');
         </div>
     </div>
 
+    <?php
+    function thai_date($date)
+    {
+        $months = [
+            'ม.ค', 'ก.พ', 'มี.ค', 'เม.ย', 'พ.ค', 'มิ.ย',
+            'ก.ค', 'ส.ค', 'ก.ย', 'ต.ค', 'พ.ย', 'ธ.ค'
+        ];
+
+        $timestamp = strtotime($date);
+        $thai_year = date(' Y', $timestamp) + 543;
+        $thai_date = date('j ', $timestamp) . $months[date('n', $timestamp) - 1] . ' ' . $thai_year;
+
+        return $thai_date;
+    }
+
+    ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
