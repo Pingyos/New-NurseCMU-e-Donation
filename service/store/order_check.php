@@ -63,7 +63,8 @@ include('conf/head.php');
                                                         </script>';
                                                 } else {
                                                     // เพิ่มข้อมูลลงในตาราง store
-                                                    $stmt_insert = $conn->prepare("INSERT INTO store (id, order_ref1, order_receipt, order_tel, order_email, order_description, order_name, order_address, amount, status_order, storage_id, order_set) VALUES (:id, :order_ref1, :order_receipt, :order_tel, :order_email, :order_description, :order_name, :order_address, :amount, :status_order, :storage_id, :order_set)");
+                                                    $user_order = isset($_POST['user_order']) ? $_POST['user_order'] : '';
+                                                    $stmt_insert = $conn->prepare("INSERT INTO store (id, order_ref1, order_receipt, order_tel, order_email, order_description, order_name, order_address, amount, status_order, storage_id, order_set, user_order) VALUES (:id, :order_ref1, :order_receipt, :order_tel, :order_email, :order_description, :order_name, :order_address, :amount, :status_order, :storage_id, :order_set, :user_order)");
 
                                                     $stmt_insert->bindParam(':id', $result['id']);
                                                     $stmt_insert->bindParam(':order_ref1', $result['ref1']);
@@ -81,7 +82,8 @@ include('conf/head.php');
                                                     $stmt_insert->bindParam(':amount', $result['amount']);
                                                     $stmt_insert->bindParam(':status_order', $_POST['status_order']);
 
-                                                    // Initialize $order_set
+                                                    $stmt_insert->bindParam(':user_order', $user_order);
+
                                                     $order_set = '';
 
                                                     $stmt_storage = $conn->prepare("SELECT * FROM storage ORDER BY max ASC");
@@ -101,6 +103,7 @@ include('conf/head.php');
                                                     }
                                                     $stmt_insert->bindParam(':storage_id', $storage_id);
                                                     $stmt_insert->bindParam(':order_set', $order_set);
+
 
                                                     if ($stmt_insert->execute()) {
                                                         // ถ้า INSERT สำเร็จ
@@ -176,6 +179,7 @@ include('conf/head.php');
                                                     <input type="text" class="form-control" name="id" id="id" required>
                                                 </div>
                                                 <input type="hidden" name="status_order" id="status_order" value="success">
+                                                <input type="hidden" name="user_order" id="user_order" value="phatcharapon.n@cmu.ac.th">
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
                                                         <button type="submit" class="btn btn-primary" id="saveButton">ยันยืนการจัดส่ง</button>
