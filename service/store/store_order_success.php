@@ -195,10 +195,11 @@ include('conf/head.php');
                                                                     <div class="col-md-9">
                                                                         <p class="form-control-static">
                                                                             <?php if ($t1['status_order'] == 'success') : ?>
-                                                                                <span class="mb-1 badge rounded-pill font-medium bg-success-subtle text-success">ยืนยันการจัดส่งของที่ระลึง เมื่อ ( <?= thai_date(date('d/m/Y', strtotime($t1['dateCreate']))); ?>
+                                                                                <span class="mb-1 badge rounded-pill font-medium bg-success-subtle text-success">ยืนยันการจัดส่งของที่ระลึง เมื่อ ( <?= thai_date($t1['dateCreate']); ?>
                                                                                     เวลา <?= date('H:i:s', strtotime($t1['dateCreate'])); ?> )</span>
                                                                             <?php else : ?>
-                                                                                <span class="mb-1 badge rounded-pill font-medium bg-danger-subtle text-danger">ของที่ระลึงถูกยกเลิกการจัดส่ง</span>
+                                                                                <span class="mb-1 badge rounded-pill font-medium bg-danger-subtle text-danger">ของที่ระลึงถูกยกเลิกการจัดส่ง เมื่อ ( <?= thai_date($t1['dateCreate']); ?>
+                                                                                    เวลา <?= date('H:i:s', strtotime($t1['dateCreate'])); ?> ) </span>
                                                                             <?php endif; ?>
                                                                         </p>
                                                                     </div>
