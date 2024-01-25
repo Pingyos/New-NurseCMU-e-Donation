@@ -24,7 +24,7 @@ if (isset($_SESSION['login_info'])) {
                     $redirectURL = "https://app.nurse.cmu.ac.th/edonation/service/store";
                     break;
                 case 3:
-                    $redirectURL = "https://app.nurse.cmu.ac.th/edonation/service/admin";
+                    $redirectURL = "https://app.nurse.cmu.ac.th/edonation/service/allstatus";
                     break;
                 default:
                     echo "Invalid status value";
