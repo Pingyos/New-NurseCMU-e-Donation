@@ -38,8 +38,9 @@ include('conf/head.php');
                             <div class="card">
                                 <img src="../assets/images/souvenir/<?= $t1['img_file']; ?>" class="custom-block-image img-fluid" alt="">
                                 <div class="card-body">
-                                    <h5 class="card-title"><?= $t1['name'] ?></h5>
+                                    <h5 class="card-title"><?= $t1['name'] ?> (<?= $t1['items_set'] ?>)</h5>
                                     <p class="card-text">ตั้งแต่ <?= number_format($t1['min'], 2); ?> บาท ถึง <?= number_format($t1['max'], 2); ?> บาท </p>
+                                    <h5 class="card-title">จำนวนคงเหลือ <?= $t1['items'] ?> ชิ้น</h5>
                                 </div>
                             </div>
                         </div>

@@ -74,15 +74,23 @@ include('conf/head.php');
                                             <?php
                                             require_once 'conf/connection.php';
                                             $check = isset($_GET['check']) ? $_GET['check'] : '';
+
                                             if ($check == 'success') {
-                                                $stmt_receipt = $conn->prepare("SELECT * FROM store WHERE status_order = 'success'");
+                                                $stmt_receipt = $conn->prepare("SELECT store.*, storage.name 
+                                    FROM store 
+                                    INNER JOIN storage ON store.storage_id = storage.id 
+                                    WHERE store.status_order = 'success'");
                                                 $stmt_receipt->execute();
                                                 $result = $stmt_receipt->fetchAll();
                                             } elseif ($check == 'cancel') {
-                                                $stmt_receipt = $conn->prepare("SELECT * FROM store WHERE status_order = 'cancel'");
+                                                $stmt_receipt = $conn->prepare("SELECT store.*, storage.name 
+                                    FROM store 
+                                    INNER JOIN storage ON store.storage_id = storage.id 
+                                    WHERE store.status_order = 'cancel'");
                                                 $stmt_receipt->execute();
                                                 $result = $stmt_receipt->fetchAll();
                                             }
+
                                             $countrow = 1;
                                             foreach ($result as $t1) {
                                             ?>
@@ -103,14 +111,14 @@ include('conf/head.php');
                                                         <p class="mb-0 fw-normal"><?= $t1['order_name']; ?></p>
                                                     </td>
                                                     <td>
-                                                        <p class="mb-0 fw-normal"><?= $t1['order_set']; ?></p>
+                                                        <p class="mb-0 fw-normal"><?= $t1['order_set']; ?> (<?= $t1['name']; ?>)</p>
                                                     </td>
                                                     <td>
                                                         <?php
                                                         if ($t1['status_order'] == 'success') {
                                                             echo '<span class="mb-1 badge text-bg-success">จัดส่งแล้ว</span>';
                                                         } else {
-                                                            echo '<span class="mb-1 badge text-bg-danger">ยกเลิกออเดอร์</span>'; // You can customize this part for other status values
+                                                            echo '<span class="mb-1 badge text-bg-danger">ยกเลิกออเดอร์</span>';
                                                         }
                                                         ?>
                                                     </td>

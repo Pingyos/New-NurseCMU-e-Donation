@@ -138,7 +138,7 @@ include('conf/head.php');
                                                             <p class="mb-0 fw-normal"><?= $name; ?></p>
                                                         </td>
                                                         <td>
-                                                            <p class="mb-0 fw-normal"><?= $order_set; ?> <?= $order_name; ?></p>
+                                                            <p class="mb-0 fw-normal"><?= $order_set; ?> (<?= $order_name; ?>)</p>
                                                         </td>
                                                         <td>
                                                             <span class="mb-1 badge text-bg-warning">รอจัดส่ง</span>

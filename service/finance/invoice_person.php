@@ -145,18 +145,48 @@ include('conf/head.php');
                                                     <div class="mb-3">
                                                         <label for="provinces" class="form-label">จังหวัด</label>
                                                         <input type="text" name="provinces" class="form-control" id="provincesInput">
+                                                        <script>
+                                                            document.getElementById('provincesInput').addEventListener('blur', function() {
+                                                                var inputElement = this;
+                                                                var inputValue = inputElement.value.trim();
+                                                                var prefix = 'จ. ';
+                                                                if (inputValue !== '' && !inputValue.startsWith(prefix)) {
+                                                                    inputElement.value = prefix + inputValue;
+                                                                }
+                                                            });
+                                                        </script>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
                                                         <label for="amphures" class="form-label">อำเภอ</label>
                                                         <input type="text" name="amphures" id="amphuresInput" class="form-control">
+                                                        <script>
+                                                            document.getElementById('amphuresInput').addEventListener('blur', function() {
+                                                                var inputElement = this;
+                                                                var inputValue = inputElement.value.trim();
+                                                                var prefix = 'อ. ';
+                                                                if (inputValue !== '' && !inputValue.startsWith(prefix)) {
+                                                                    inputElement.value = prefix + inputValue;
+                                                                }
+                                                            });
+                                                        </script>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="mb-3">
                                                         <label for="districts" class="form-label">ตำบล</label>
                                                         <input type="text" name="districts" id="districtsInput" class="form-control">
+                                                        <script>
+                                                            document.getElementById('districtsInput').addEventListener('blur', function() {
+                                                                var inputElement = this;
+                                                                var inputValue = inputElement.value.trim();
+                                                                var prefix = 'ต. ';
+                                                                if (inputValue !== '' && !inputValue.startsWith(prefix)) {
+                                                                    inputElement.value = prefix + inputValue;
+                                                                }
+                                                            });
+                                                        </script>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
