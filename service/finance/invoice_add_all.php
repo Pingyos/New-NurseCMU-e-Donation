@@ -214,6 +214,9 @@ if (
                         } else {
                             echo "Email sent successfully.";
                         }
+
+
+
                         function notify_message($sMessage, $Token)
                         {
                             $chOne = curl_init();
@@ -231,6 +234,19 @@ if (
                             }
                             curl_close($chOne);
                         }
+                        function thai_date($date)
+                        {
+                            $months = [
+                                'ม.ค', 'ก.พ', 'มี.ค', 'เม.ย', 'พ.ค', 'มิ.ย',
+                                'ก.ค', 'ส.ค', 'ก.ย', 'ต.ค', 'พ.ย', 'ธ.ค'
+                            ];
+
+                            $timestamp = strtotime($date);
+                            $thai_year = date(' Y', $timestamp) + 543;
+                            $thai_date = date('j ', $timestamp) . $months[date('n', $timestamp) - 1] . ' ' . $thai_year;
+
+                            return $thai_date;
+                        }
                         // 6GxKHxqMlBcaPv1ufWmDiJNDucPJSWPQ42sJwPOsQQL bot test
                         // VnaAYBFqNRPYNLKLeBA3Uk9kFFyFsYdUbw8SmU9HNWf 
                         $sToken = ["6GxKHxqMlBcaPv1ufWmDiJNDucPJSWPQ42sJwPOsQQL"]; // เพิ่ม Token ของคุณที่นี่
@@ -241,7 +257,7 @@ if (
                         $sMessage .= "$user_type : " . $name_title . " " . $rec_name . " " . $rec_surname . "\n";
                         $sMessage .= "\n";
                         $sMessage .= "จำนวน: " . number_format($amount, 2) . " บาท\n";
-                        $sMessage .= "วันที่โอน: " . $rec_date_out . "\n";
+                        $sMessage .= "วันที่โอน: " . thai_date($rec_date_out) . "\n";
                         $sMessage .= "ชำระโดย: " . $payby . "\n";
 
                         // เรียกใช้งานฟังก์ชัน notify_message สำหรับทุก Token
