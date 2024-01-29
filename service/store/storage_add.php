@@ -37,8 +37,205 @@ include('conf/head.php');
                                                     เพิ่มของที่ระลึก</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <div class="card-body">
+                                            <?php
+                                            require_once 'conf/connection.php';
 
+                                            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                                try {
+                                                    $name = $_POST['name'];
+                                                    $items = $_POST['items'];
+                                                    $min = $_POST['min'];
+                                                    $max = $_POST['max'];
+                                                    $items_set = $_POST['items_set'];
+
+                                                    // Check if the file input exists and has no errors
+                                                    if (isset($_FILES['img_file']) && $_FILES['img_file']['error'] === UPLOAD_ERR_OK) {
+                                                        $image_file = $_FILES['img_file']['name'];
+                                                        $type = $_FILES['img_file']['type'];
+                                                        $size = $_FILES['img_file']['size'];
+                                                        $temp = $_FILES['img_file']['tmp_name'];
+
+                                                        $path = "../assets/images/souvenir/" . $image_file;
+
+                                                        if (empty($name) || empty($items) || empty($min) || empty($max) || empty($items_set) || empty($image_file)) {
+                                                            $errorMsg = "Please fill in all fields";
+                                                        } elseif (!in_array($type, ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'])) {
+                                                            echo '<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>';
+                                                            echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>';
+                                                            echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">';
+                                                            echo '<script>
+                                                                $(document).ready(function() {
+                                                                    swal({
+                                                                        title: "อัปโหลดรูปแบบไฟล์ JPG, JPEG, PNG และ GIF เท่านั้น", 
+                                                                        text: "กรุณารอสักครู่",
+                                                                        type: "error", 
+                                                                        timer: 2000, 
+                                                                        showConfirmButton: false 
+                                                                    }, function(){
+                                                                        window.location.href = "storage_add.php"; 
+                                                                    });
+                                                                });
+                                                            </script>';
+                                                        } elseif ($size > 5000000) {
+                                                            echo '<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>';
+                                                            echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>';
+                                                            echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">';
+                                                            echo '<script>
+                                                                $(document).ready(function() {
+                                                                    swal({
+                                                                        title: "ไฟล์ต้องไม่ขนากไม่เกิน 5 MB", 
+                                                                        text: "กรุณารอสักครู่",
+                                                                        type: "error", 
+                                                                        timer: 2000, 
+                                                                        showConfirmButton: false 
+                                                                    }, function(){
+                                                                        window.location.href = "storage_add.php"; 
+                                                                    });
+                                                                });
+                                                            </script>';
+                                                        } elseif (file_exists($path)) {
+                                                            echo '<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>';
+                                                            echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>';
+                                                            echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">';
+                                                            echo '<script>
+                                                                $(document).ready(function() {
+                                                                    swal({
+                                                                        title: "มีไฟล์รูปอยู่แล้ว ตรวจสอบชื่อไฟล์ให้ไม่ช้ำกัน", 
+                                                                        text: "กรุณารอสักครู่",
+                                                                        type: "error", 
+                                                                        timer: 2000, 
+                                                                        showConfirmButton: false 
+                                                                    }, function(){
+                                                                        window.location.href = "storage_add.php"; 
+                                                                    });
+                                                                });
+                                                            </script>';
+                                                        } else {
+                                                            move_uploaded_file($temp, '../assets/images/souvenir/' . $image_file);
+
+                                                            $insert_stmt = $conn->prepare('INSERT INTO `storage` (name, items, min, max, items_set, img_file, dateCreate) VALUES (:name, :items, :min, :max, :items_set, :img_file, :dateCreate)');
+                                                            $insert_stmt->bindParam(':name', $name);
+                                                            $insert_stmt->bindParam(':items', $items);
+                                                            $insert_stmt->bindParam(':min', $min);
+                                                            $insert_stmt->bindParam(':max', $max);
+                                                            $insert_stmt->bindParam(':items_set', $items_set);
+                                                            $insert_stmt->bindParam(':img_file', $image_file);
+                                                            $insert_stmt->bindParam(':dateCreate', date('Y-m-d H:i:s'));
+
+                                                            if ($insert_stmt->execute()) {
+                                                                echo '<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>';
+                                                                echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>';
+                                                                echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">';
+                                                                echo '<script>
+                                                                    $(document).ready(function() {
+                                                                        swal({
+                                                                            title: "บันทึกข้อมูลสินค้าสำเร็จ", 
+                                                                            text: "กรุณารอสักครู่",
+                                                                            type: "success", 
+                                                                            timer: 2000, 
+                                                                            showConfirmButton: false 
+                                                                        }, function(){
+                                                                            window.location.href = "storage_add.php"; 
+                                                                        });
+                                                                    });
+                                                                </script>';
+                                                            } else {
+                                                                echo '<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>';
+                                                                echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>';
+                                                                echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">';
+                                                                echo '<script>
+                                                                    $(document).ready(function() {
+                                                                        swal({
+                                                                            title: "บันทึกข้อมูลสินค้าไม่สำเร็จ", 
+                                                                            text: "กรุณารอสักครู่",
+                                                                            type: "error", 
+                                                                            timer: 2000, 
+                                                                            showConfirmButton: false 
+                                                                        }, function(){
+                                                                            window.location.href = "storage_add.php"; 
+                                                                        });
+                                                                    });
+                                                                </script>';
+                                                            }
+                                                        }
+                                                    } else {
+                                                        $errorMsg = "Please select a valid file";
+                                                    }
+                                                } catch (PDOException $e) {
+                                                    $errorMsg = "Error: " . $e->getMessage();
+                                                }
+                                            }
+                                            ?>
+                                            <div class="card-body">
+                                                <form method="post" enctype="multipart/form-data">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="name" class="form-label">ชื่อของที่ระลึง</label>
+                                                                <input type="text" id="name" class="form-control" name="name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="items" class="form-label">จำนวนคงเหลือ</label>
+                                                                <input type="text" id="items" class="form-control" name="items">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="min" class="form-label">บริจาค
+                                                                    เริ่มต้น</label>
+                                                                <input type="number" id="min" class="form-control" name="min">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="max" class="form-label">บริจาค
+                                                                    มากสุด</label>
+                                                                <input type="number" id="max" class="form-control" name="max">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="items_set" class="form-label">ตัวย่อสินค้า</label>
+                                                                <input type="text" id="items_set" class="form-control" name="items_set" maxlength="2" readonly>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <script>
+                                                            function generateRandomString() {
+                                                                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                                                                const numbers = '0123456789';
+                                                                const randomLetter = characters.charAt(Math.floor(Math.random() * characters.length));
+                                                                const randomNumber = numbers.charAt(Math.floor(Math.random() * numbers.length));
+                                                                return randomLetter + randomNumber;
+                                                            }
+                                                            document.addEventListener('DOMContentLoaded', function() {
+                                                                const itemsSetInput = document.getElementById('items_set');
+                                                                itemsSetInput.value = generateRandomString();
+                                                            });
+                                                        </script>
+
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="img_file" class="form-label">รูปภาพ</label>
+                                                                <input type="file" id="img_file" class="form-control" name="img_file">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="d-md-flex align-items-center">
+                                                                <div class="ms-auto mt-3 mt-md-0">
+                                                                    <button type="submit" class="btn btn-primary font-medium rounded-pill px-4">
+                                                                        <div class="d-flex align-items-center">
+                                                                            บันทึกการอัพเดท
+                                                                        </div>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -123,27 +320,27 @@ include('conf/head.php');
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
+                                                                <div class="mb-3">
+                                                                    <label for="name" class="form-label">ชื่อของที่ระลึง</label>
                                                                     <input type="text" class="form-control" id="name" name="name" value="<?= $t1['name']; ?>">
-                                                                    <label for="name">ชื่อของที่ระลึง</label>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
+                                                                <div class="mb-3">
+                                                                    <label for="items" class="form-label">จำนวนคงเหลือ</label>
                                                                     <input type="number" class="form-control" id="items" name="items" value="<?= $t1['items']; ?>">
-                                                                    <label for="items">จำนวนคงเหลือ</label>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
+                                                                <div class="mb-3">
+                                                                    <label for="min" class="form-label">บริจาค เริ่มต้น</label>
                                                                     <input type="number" class="form-control" id="min" name="min" value="<?= $t1['min']; ?>">
-                                                                    <label for="min">บริจาค เริ่มต้น</label>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
+                                                                <div class="mb-3">
+                                                                    <label for="max" class="form-label">บริจาค มากสุด</label>
                                                                     <input type="number" class="form-control" id="max" name="max" value="<?= $t1['max']; ?>">
-                                                                    <label for="max">บริจาค มากสุด</label>
                                                                 </div>
                                                             </div>
                                                             <input type="hidden" name="items_set" id="items_set" value="<?= $t1['items_set']; ?>">
@@ -165,7 +362,8 @@ include('conf/head.php');
                                                         </div>
                                                     </form>
                                                     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
+                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js">
+                                                    </script>
                                                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 
                                                     <script>
@@ -198,13 +396,18 @@ include('conf/head.php');
                                                                 dataType: "json",
                                                                 success: function(response) {
                                                                     if (response.status === "success") {
-                                                                        swal("สำเร็จ!", "บันทึกการอัพเดทเรียบร้อยแล้ว", "success");
+                                                                        swal("สำเร็จ!",
+                                                                            "บันทึกการอัพเดทเรียบร้อยแล้ว",
+                                                                            "success");
                                                                     } else {
-                                                                        swal("ผิดพลาด!", "เกิดข้อผิดพลาดในการอัพเดท: " + response.message, "error");
+                                                                        swal("ผิดพลาด!",
+                                                                            "เกิดข้อผิดพลาดในการอัพเดท: " +
+                                                                            response.message, "error");
                                                                     }
                                                                 },
                                                                 error: function() {
-                                                                    swal("ผิดพลาด!", "เกิดข้อผิดพลาดในการส่งคำขอ", "error");
+                                                                    swal("ผิดพลาด!", "เกิดข้อผิดพลาดในการส่งคำขอ",
+                                                                        "error");
                                                                 }
                                                             });
                                                         }
